@@ -1,7 +1,7 @@
 package hwr.oop.examples.template.core
 
 interface Card {
-    val name: String
+    val name: CardNames
     val cost: Int
 
     val actions: Int
