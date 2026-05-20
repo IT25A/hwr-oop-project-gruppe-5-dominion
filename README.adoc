@@ -75,6 +75,8 @@ just
 | `just start-db` | PostgreSQL-Datenbank starten (erfordert Docker)
 | `just stop-db` | PostgreSQL-Datenbank stoppen
 | `just discard-db` | PostgreSQL-Datenbank stoppen und alle Daten löschen
+| `just mutation-test` | Mutationstests für das `core`-Modul ausführen (PITest)
+| `just mutation-test-open` | Aktuellen PITest-Bericht im Browser öffnen
 |===
 
 == Arbeiten mit dem Template-Repository (Upstream)

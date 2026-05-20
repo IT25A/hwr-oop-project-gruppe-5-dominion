@@ -36,3 +36,11 @@ stop-db:
 # Stop the local PostgreSQL database and delete all data
 discard-db:
     docker compose --project-directory tools/localenv/postgresql down -v
+
+# Run PITest mutation testing on the core module
+mutation-test:
+    {{ mvnw }} -pl core org.pitest:pitest-maven:mutationCoverage
+
+# Open the latest PITest mutation testing report in the default browser
+mutation-test-open:
+    {{ if os() == "windows" { "start core/target/pit-reports/index.html" } else if os() == "macos" { "open core/target/pit-reports/index.html" } else { "xdg-open core/target/pit-reports/index.html" } }}

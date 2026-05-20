@@ -48,6 +48,8 @@
     <maven-surefire.version>3.5.2</maven-surefire.version>
     <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
     <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
+    <pitest.version>1.23.1</pitest.version>
+    <pitest-junit5-plugin.version>1.2.3</pitest-junit5-plugin.version>
   </properties>
 
   <!-- kotlin-stdlib inherited by all submodules -->
@@ -417,6 +419,16 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
           <version>${maven-shade-plugin.version}</version>
+        </plugin>
+        <!--
+          PITest: Mutation testing plugin.
+          Configured in the core module only to run mutation tests
+          against the core domain classes.
+        -->
+        <plugin>
+          <groupId>org.pitest</groupId>
+          <artifactId>pitest-maven</artifactId>
+          <version>${pitest.version}</version>
         </plugin>
       </plugins>
     </pluginManagement>
