@@ -83,8 +83,8 @@ class GameInstance(private val game: Game, private val id: String) {
             return GameInstance(game, gId)
         }
 
-        private fun createMarket(kingdomCards: List<String>): Market {
-            return Market(emptySet())
+        private fun createMarket(kingdomCards: List<String>): GameMarket {
+            return GameMarket(emptySet())
         }
     }
 

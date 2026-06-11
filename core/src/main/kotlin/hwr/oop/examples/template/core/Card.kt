@@ -1,13 +1,24 @@
 package hwr.oop.examples.template.core
 
-enum class Card (private val card: CardDefinition, private val apiValue: String) {
+import hwr.oop.examples.template.core.cards.*
+import org.jetbrains.annotations.TestOnly
 
-    COPPER(Copper(), "copper"),
-    ESTATE(Estate(), "estate"),
-    TEST(Copper(), "test"),;
+enum class Card (private val card: CardDefinition) {
+
+    COPPER(Copper()),
+    SILVER(Silver()),
+    GOLD(Gold()),
+    ESTATE(Estate()),
+    DUCHY(Duchy()),
+    LABORATORY(Laboratory()),
+    MARKET(Market()),
+    SMITHY(Smithy()),
+    VILLAGE(Village()),
+    WOODCUTTER(Woodcutter()),
+    FESTIVAL(Festival());
 
     companion object {
-        private val apiValues = entries.associateBy(Card::apiValue)
+        private val apiValues = entries.associateBy { it.name }
 
         fun byName(name: String): Card {
             return apiValues[name]?: throw NoSuchCardException(name)

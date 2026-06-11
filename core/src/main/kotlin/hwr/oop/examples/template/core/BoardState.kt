@@ -1,6 +1,6 @@
 package hwr.oop.examples.template.core
 
-data class BoardState(val market: Market, val players: List<Player>){
+data class BoardState(val market: GameMarket, val players: List<Player>){
 
     fun piles() = market.piles
 

@@ -44,7 +44,7 @@ class CardCycleTest {
         val player = ActivePlayer.create(Player("a", PlayerCards()).draw(5))
         val current = player.player.hand().size
 ""      //when
-        val result = player.play(Card.COPPER, BoardState(Market(emptySet()), emptyList())) as PlayResult.Complete
+        val result = player.play(Card.COPPER, BoardState(GameMarket(emptySet()), emptyList())) as PlayResult.Complete
         val game = result.context.flush()
         //then
         assertThat(game.activePlayer.player.hand().size).isEqualTo(current - 1)
