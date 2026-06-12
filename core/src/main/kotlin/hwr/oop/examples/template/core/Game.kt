@@ -16,14 +16,14 @@ class Game(
 
     fun next(): Game{
         requireGameRunning(status)
-        return Game(GameStatus.Running, state.nextState(activePlayer), ActivePlayer.create(state.nextPlayer()))
+        return Game(state.nextState(activePlayer), ActivePlayer.create(state.nextPlayer()))
     }
 
     fun play(card: Card): Game {
         requireGameRunning(status)
         return when(val result = activePlayer.play(card, state)){
             is PlayResult.Complete -> result.context.flush()
-            is PlayResult.WaitingForChoice -> Game(GameStatus.WaitingForChoice(result.card, result.choices), state, activePlayer)
+            is PlayResult.WaitingForChoice -> Game(state, activePlayer, GameStatus.WaitingForChoice(result.effect))
         }
     }
 
@@ -40,7 +40,7 @@ class Game(
             return result.context.flush()
         }
 
-        return Game(GameStatus.WaitingForChoice(result), state, activePlayer)
+        return Game(state, activePlayer, GameStatus.WaitingForChoice(result))
     }
 
 

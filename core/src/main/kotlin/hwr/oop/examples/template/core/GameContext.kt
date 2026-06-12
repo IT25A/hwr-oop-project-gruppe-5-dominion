@@ -8,6 +8,6 @@ class GameContext(
     fun player() = activePlayer
     fun state() = state
     fun flush(): Game {
-        return Game(GameStatus.Running, state, activePlayer)
+        return Game(state, activePlayer)
     }
 }

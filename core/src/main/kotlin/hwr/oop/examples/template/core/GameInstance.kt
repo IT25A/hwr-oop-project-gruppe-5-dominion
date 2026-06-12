@@ -78,7 +78,7 @@ class GameInstance(private val game: Game, private val id: String) {
             val players = players.map { Player(it, PlayerCards()) }
             val market = createMarket(kingdomCards)
             val state = BoardState(market, players.drop(1))
-            val game = Game(GameStatus.Running, state, ActivePlayer.create(players[0]))
+            val game = Game(state, ActivePlayer.create(players[0]))
             val gId = UUID.randomUUID().toString()
             return GameInstance(game, gId)
         }
