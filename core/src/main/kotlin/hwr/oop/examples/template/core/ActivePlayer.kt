@@ -14,7 +14,7 @@ class ActivePlayer(
     }
 
     fun actions() = stats.actions
-    fun purchases() = stats.purchases
+    fun buys() = stats.purchases
     fun coins() = stats.money
 
     fun id() = player.id
@@ -27,8 +27,8 @@ class ActivePlayer(
         throw CardNotInHandException(card)
     }
 
-    fun resume(card: Card, game: BoardState, answers: Map<String, List<AnsweredChoice>>): PlayResult.Complete {
-        return card.resume(GameContext(this, game), answers)
+    fun resume(game: BoardState, effect: ActiveEffect): PlayResult.Complete {
+        return effect.card.resume(GameContext(this, game), effect)
     }
 
     fun canAfford(cost: Int) = stats.money > cost

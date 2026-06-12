@@ -4,9 +4,10 @@ import kotlin.collections.orEmpty
 import kotlin.collections.plus
 
 class Game(
-    private val status: GameStatus,
     private val state: BoardState,
-    internal val activePlayer: ActivePlayer) {
+    internal val activePlayer: ActivePlayer,
+    private val status: GameStatus = GameStatus.Running
+) {
 
     fun piles() = state.piles()
     fun players() = state.players + activePlayer.player
@@ -33,36 +34,15 @@ class Game(
 
     fun answer(answer: AnsweredChoice): Game{
         require(status is GameStatus.WaitingForChoice)
-        val name = answer.playerID
-        val choices = status.choices[name] ?: throw NoPendingChoiceException(name)
-        choices.first().verify(answer)
-
-        val withAnswer = addAnswer(name, answer)
-        val withoutChoice = removeChoice(name)
-        if(withoutChoice.values.flatten().isEmpty()) {
-            val result = activePlayer.resume(status.card, state, withAnswer)
+        val result = status.effect.answer(answer)
+        if (result.isResolved()) {
+            val result = activePlayer.resume(state, result)
             return result.context.flush()
         }
 
-        return Game(GameStatus.WaitingForChoice(status.card, withoutChoice, withAnswer), state, activePlayer)
+        return Game(GameStatus.WaitingForChoice(result), state, activePlayer)
     }
 
-    private fun addAnswer(name: String, answer: AnsweredChoice): Map<String,List<AnsweredChoice>> {
-        require(status is GameStatus.WaitingForChoice)
-        return status.answered + (
-                    name to (status.answered[name].orEmpty() + answer)
-                )
-    }
 
-    private fun removeChoice(name: String): Map<String, List<PendingChoice>> {
-        require(status is GameStatus.WaitingForChoice)
-        val choices = status.choices[name]?.drop(1)
-        val others = status.choices.filterNot { it.key == name }
-        if(choices.isNullOrEmpty()) {
-            return others
-        }
-
-        return others + (name to choices)
-    }
 
 }

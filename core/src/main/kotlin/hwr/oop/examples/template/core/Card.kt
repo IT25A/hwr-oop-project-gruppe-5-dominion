@@ -42,8 +42,8 @@ enum class Card (private val card: CardDefinition) {
         return card.beginAction(context)
     }
 
-    fun resume(context: GameContext, choices: Map<String, List<AnsweredChoice>>): PlayResult.Complete {
-        return card.endAction(context, choices)
+    fun resume(context: GameContext, effect: ActiveEffect): PlayResult.Complete {
+        return card.endAction(context, effect)
     }
 
     fun cost() = card.cost
