@@ -23,7 +23,7 @@ class GameInstance(private val game: Game, private val id: String) {
     }
 
     fun buysRemaining(): Int {
-        return game.activePlayer.purchases()
+        return game.activePlayer.buys()
     }
 
     fun coinsAvailable(): Int {

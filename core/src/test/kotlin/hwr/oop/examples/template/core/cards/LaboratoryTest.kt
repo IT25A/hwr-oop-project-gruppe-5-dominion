@@ -10,7 +10,7 @@ import hwr.oop.examples.template.core.Stats
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
-class LaboratoryTest: CardTest(Card.LABORATORY, Laboratory()) {
+class LaboratoryTest: CardTest(Card.LABORATORY, 2, 1, 0, 0) {
     @Test
     fun laboratoryPlayTest() {
         super.playTest()

@@ -11,7 +11,7 @@ import hwr.oop.examples.template.core.Stats
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
-class MarketTest : CardTest(Card.MARKET, Market()) {
+class MarketTest : CardTest(Card.MARKET, 1, 1, 1, 1) {
     @Test
     fun marketPlayTest() {
         super.playTest()

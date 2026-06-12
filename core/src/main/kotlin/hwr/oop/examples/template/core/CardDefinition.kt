@@ -14,7 +14,7 @@ interface CardDefinition {
         return PlayResult.Complete(context)
     }
 
-    fun endAction(context: GameContext, choices: Map<String, List<AnsweredChoice>>): PlayResult.Complete {
+    fun endAction(context: GameContext, effect: ActiveEffect): PlayResult.Complete {
         return PlayResult.Complete(context)
     }
 }
