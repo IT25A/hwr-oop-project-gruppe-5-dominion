@@ -54,10 +54,7 @@ class GameInstance(private val game: Game, private val id: String) {
         val cards = cardNames.map { Card.byName(it) }
         val updated = cards.fold(game) { current, card ->
                 requireTreasure(card)
-                val result = current.play(card)
-                if(!result.isRunning())
-                    throw NoTreasureException(card)
-                else result
+                current.play(card)
         }
         return GameInstance(updated, id)
     }
@@ -78,13 +75,13 @@ class GameInstance(private val game: Game, private val id: String) {
             val players = players.map { Player(it, PlayerCards()) }
             val market = createMarket(kingdomCards)
             val state = BoardState(market, players.drop(1))
-            val game = Game(state, ActivePlayer.create(players[0]))
+            val game = Game(state, ActivePlayer.create(players[0]), GameStatus.ActionPhase)
             val gId = UUID.randomUUID().toString()
             return GameInstance(game, gId)
         }
 
         private fun createMarket(kingdomCards: List<String>): GameMarket {
-            return GameMarket(emptySet())
+            return GameMarket(kingdomCards.map { Pile(Card.byName(it), 10) }.toSet())
         }
     }
 

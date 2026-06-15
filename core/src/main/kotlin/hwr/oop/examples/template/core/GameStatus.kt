@@ -1,8 +1,9 @@
 package hwr.oop.examples.template.core
 
 sealed interface GameStatus {
-    object Running : GameStatus
-    data class WaitingForChoice(
+    object ActionPhase : GameStatus
+    object BuyPhase : GameStatus
+    data class EffectActive(
         val effect: ActiveEffect
     ) : GameStatus
 }
