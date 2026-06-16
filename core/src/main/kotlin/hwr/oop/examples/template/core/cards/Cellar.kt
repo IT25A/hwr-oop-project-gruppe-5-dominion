@@ -9,22 +9,14 @@ import hwr.oop.examples.template.core.CardEffectDSL
 import hwr.oop.examples.template.core.GameContext
 
 class Cellar: CardDefinition {
-    override val types: List<CardType>
-        get() = TODO("Not yet implemented")
-    override val name: String
-        get() = TODO("Not yet implemented")
-    override val cost: Int
-        get() = TODO("Not yet implemented")
-    override val draw: Int
-        get() = TODO("Not yet implemented")
-    override val actions: Int
-        get() = TODO("Not yet implemented")
-    override val buys: Int
-        get() = TODO("Not yet implemented")
-    override val gold: Int
-        get() = TODO("Not yet implemented")
-    override val points: Int
-        get() = TODO("Not yet implemented")
+    override val types: List<CardType> = listOf(CardType.ACTION)
+    override val name: String = "Cellar"
+    override val cost: Int = 5
+    override val draw: Int = 0
+    override val actions: Int = 1
+    override val buys: Int = 0
+    override val gold: Int = 0
+    override val points: Int = 0
 
     override fun getEffect(initial: GameContext): CardEffect {
 
