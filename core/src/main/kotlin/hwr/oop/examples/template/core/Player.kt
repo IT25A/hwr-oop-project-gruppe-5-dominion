@@ -1,6 +1,6 @@
 package hwr.oop.examples.template.core
 
-data class Player(internal val id: String, internal val cards: PlayerCards){
+data class Player(internal val id: PlayerId, internal val cards: PlayerCards){
 
     fun id() = id
 
@@ -20,7 +20,7 @@ data class Player(internal val id: String, internal val cards: PlayerCards){
         return Player(id, cards.use(card))
     }
 
-    fun hand(): List<Card> {
+    fun currentHand(): List<Card> {
         return cards.hand
     }
 
@@ -28,8 +28,16 @@ data class Player(internal val id: String, internal val cards: PlayerCards){
         return emptyList()
     }
 
-    fun discard(): List<Card> {
+    fun currentDiscard(): List<Card> {
         return cards.discard
+    }
+
+    fun discard(selection: List<Card>): Player {
+        if(cards.isValidSelection(selection)) {
+            return Player(id, cards.removeSelection(selection))
+        }
+
+        throw InvalidSelectionException()
     }
 
     fun deckSize(): Int {
@@ -39,5 +47,7 @@ data class Player(internal val id: String, internal val cards: PlayerCards){
     fun holds(card: Card): Boolean {
         return cards.inHand(card)
     }
+
+
 
 }

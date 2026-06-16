@@ -59,6 +59,15 @@ class PlayerCards(private val stock: List<Card> = List(4){ Card.COPPER } + List(
         return hand.contains(card)
     }
 
+    fun isValidSelection(selection: List<Card>): Boolean{
+        return hand.containsAllCopiesOf(selection)
+    }
+
+    fun removeSelection(selection: List<Card>): PlayerCards {
+        return PlayerCards(stock, discard + selection, hand.subtractCopiesOf(selection), used)
+    }
+
+
     fun handSize() = hand.size
     fun usedSize() = used.size
     fun stockSize() = stock.size

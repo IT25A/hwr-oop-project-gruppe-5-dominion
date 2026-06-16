@@ -5,8 +5,8 @@ import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
 
 class MarketPurchaseTest {
-    val _player = ActivePlayer.create(Player("", PlayerCards()))
-    val _richPlayer = ActivePlayer(Player("", PlayerCards()), Stats(1, 1, 10))
+    val _player = ActivePlayer.create(Player(PlayerId(""), PlayerCards()))
+    val _richPlayer = ActivePlayer(Player(PlayerId(""), PlayerCards()), Stats(1, 1, 10))
 
     @Test
     fun `returns only piles matching predicate`() {

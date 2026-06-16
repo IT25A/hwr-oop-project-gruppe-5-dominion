@@ -10,11 +10,7 @@ interface CardDefinition {
     val gold: Int
     val points: Int
 
-    fun beginAction(context: GameContext): PlayResult {
-        return PlayResult.Complete(context)
-    }
-
-    fun endAction(context: GameContext, effect: ActiveEffect): PlayResult.Complete {
-        return PlayResult.Complete(context)
+    fun getEffect(initial: GameContext): CardEffect? {
+        return null
     }
 }

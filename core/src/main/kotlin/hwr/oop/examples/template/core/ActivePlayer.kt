@@ -19,16 +19,12 @@ class ActivePlayer(
 
     fun id() = player.id
 
-    fun play(card: Card, game: BoardState): PlayResult {
+    fun play(card: Card, game: BoardState): Game {
         if(player.holds(card)) {
             return card.play(player, stats, game)
         }
 
         throw CardNotInHandException(card)
-    }
-
-    fun resume(game: BoardState, effect: ActiveEffect): PlayResult.Complete {
-        return effect.card.resume(GameContext(this, game), effect)
     }
 
     fun canAfford(cost: Int) = stats.money > cost
@@ -46,6 +42,10 @@ class ActivePlayer(
 
     fun endTurn(): Player {
         return player.endTurn()
+    }
+
+    fun discard(cards: List<Card>): ActivePlayer {
+        return ActivePlayer(player.discard(cards), stats)
     }
 
 }

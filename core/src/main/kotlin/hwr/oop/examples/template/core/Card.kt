@@ -1,7 +1,6 @@
 package hwr.oop.examples.template.core
 
 import hwr.oop.examples.template.core.cards.*
-import org.jetbrains.annotations.TestOnly
 
 enum class Card (private val card: CardDefinition) {
 
@@ -15,6 +14,7 @@ enum class Card (private val card: CardDefinition) {
     SMITHY(Smithy()),
     VILLAGE(Village()),
     WOODCUTTER(Woodcutter()),
+    CELLAR(Cellar()),
     FESTIVAL(Festival());
 
     companion object {
@@ -35,15 +35,16 @@ enum class Card (private val card: CardDefinition) {
         return card.types.contains(CardType.TREASURE)
     }
 
-    fun play(player: Player, currentStats: Stats, state: BoardState): PlayResult {
+    fun play(player: Player, currentStats: Stats, state: BoardState): Game {
         val stats = currentStats.change(card.actions, card.buys, card.gold)
         val playerAfterDraw = player.draw(card.draw)
         val context = GameContext(ActivePlayer(playerAfterDraw.use(this), stats), state)
-        return card.beginAction(context)
-    }
+        val effect = card.getEffect(context)
+        if(effect != null) {
+            return effect.execute()
+        }
 
-    fun resume(context: GameContext, effect: ActiveEffect): PlayResult.Complete {
-        return card.endAction(context, effect)
+        return context.flush()
     }
 
     fun cost() = card.cost

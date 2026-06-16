@@ -11,7 +11,7 @@ class GameInstance(private val game: Game, private val id: String) {
     }
 
     fun currentPlayerId(): String {
-        return game.activePlayer.id()
+        return game.activePlayer.id().value
     }
 
     fun currentPhase(): String {
@@ -43,7 +43,7 @@ class GameInstance(private val game: Game, private val id: String) {
     }
 
     fun isActivePlayer(playerId: String): Boolean {
-        return game.activePlayer.id() == playerId
+        return game.activePlayer.id().value == playerId
     }
 
     fun playAction(cardName: String): GameInstance{
@@ -53,7 +53,9 @@ class GameInstance(private val game: Game, private val id: String) {
     fun playTreasures(cardNames: List<String>): GameInstance {
         val cards = cardNames.map { Card.byName(it) }
         val updated = cards.fold(game) { current, card ->
-                requireTreasure(card)
+                if(!card.isTreasure()){
+                    throw NoTreasureException(card)
+                }
                 current.play(card)
         }
         return GameInstance(updated, id)
@@ -72,10 +74,10 @@ class GameInstance(private val game: Game, private val id: String) {
             players: List<String>,
             kingdomCards: List<String>
         ): GameInstance {
-            val players = players.map { Player(it, PlayerCards()) }
+            val players = players.map { Player(PlayerId(it), PlayerCards()) }
             val market = createMarket(kingdomCards)
             val state = BoardState(market, players.drop(1))
-            val game = Game(state, ActivePlayer.create(players[0]), GameStatus.ActionPhase)
+            val game = Game(state, ActivePlayer.create(players[0]), GamePhase.ActionPhase)
             val gId = UUID.randomUUID().toString()
             return GameInstance(game, gId)
         }

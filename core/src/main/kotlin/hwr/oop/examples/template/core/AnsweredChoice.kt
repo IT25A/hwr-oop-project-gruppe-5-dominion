@@ -1,5 +1,5 @@
 package hwr.oop.examples.template.core
 
-data class AnsweredChoice(val playerID: String, val options: List<Int>){
-    fun optCount() = options.size
-}
+data class AnsweredChoice(
+    val playerId: String,
+    val selectedOptions: List<String>)

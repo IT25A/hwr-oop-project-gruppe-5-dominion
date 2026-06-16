@@ -5,31 +5,32 @@ import kotlin.collections.plus
 class Game(
     private val state: BoardState,
     internal val activePlayer: ActivePlayer,
-    private val status: GameStatus
+    private val phase: GamePhase,
+    private val activeEffect: CardEffect? = null
 ) {
 
     fun piles() = state.piles()
     fun players() = state.players + activePlayer.player
 
-    fun next(): Game{
-        return Game(state.nextState(activePlayer), ActivePlayer.create(state.nextPlayer()), GameStatus.ActionPhase)
+    fun nextPlayer(): Game{
+        return Game(state.nextState(activePlayer), ActivePlayer.create(state.nextPlayer()), GamePhase.ActionPhase)
     }
 
     fun updateState(): Game{
-        return when(status){
-            GameStatus.ActionPhase -> {
+        return when(phase){
+            GamePhase.ActionPhase -> {
                 if(activePlayer.actions() > 0){
                     this
                 } else {
-                    Game(state, activePlayer, GameStatus.BuyPhase)
+                    Game(state, activePlayer, GamePhase.BuyPhase)
                 }
             }
 
-            GameStatus.BuyPhase -> {
+            GamePhase.BuyPhase -> {
                 if(activePlayer.buys() > 0){
                     this
                 } else {
-                    next()
+                    nextPlayer()
                 }
             }
 
@@ -38,27 +39,27 @@ class Game(
     }
 
     fun play(card: Card): Game {
-        return when(val result = activePlayer.play(card, state)){
-            is PlayResult.Complete -> result.context.flush()
-            is PlayResult.WaitingForChoice -> Game(state, activePlayer, GameStatus.EffectActive(result.effect))
+        if(phase !is GamePhase.ActionPhase){
+            throw GameStatusException(phase, GamePhase.ActionPhase)
         }
+        return activePlayer.play(card, state)
     }
 
     fun purchase(card: Card): Game{
+        if(phase !is GamePhase.BuyPhase){
+            throw GameStatusException(phase, GamePhase.BuyPhase)
+        }
         return state.purchase(activePlayer, card)
     }
 
-    fun answer(answer: AnsweredChoice): Game{
-        require(status is GameStatus.EffectActive)
-        val result = status.effect.answer(answer)
-        if (result.isResolved()) {
-            val result = activePlayer.resume(state, result)
-            return result.context.flush()
+    fun answer(answer: AnsweredChoice): Game {
+        if (phase !is GamePhase.EffectActive) {
+            throw GameStatusException(phase, GamePhase.EffectActive)
         }
 
-        return Game(state, activePlayer, GameStatus.EffectActive(result))
+        val effect = requireNotNull(activeEffect)
+        return effect.answer(GameContext(activePlayer, state),  answer)
     }
-
 
 
 }
