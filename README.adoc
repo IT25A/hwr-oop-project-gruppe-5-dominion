@@ -1,6 +1,4 @@
-= HWR OOP Lecture Project Template
-
-// TODO: Change headline to better fit your project!
+= HWR OOP Group 5 not quite !!! Dominion Game
 
 This repository contains a student project created for an ongoing lecture on object-oriented programming with Kotlin at HWR Berlin (summer term 2026).
 
@@ -9,7 +7,17 @@ Do not rely on it!
 
 == Feature Liste
 
-// TODO : Add a list of features that your project implements. This can be a simple bullet list or a tables
+The project implements the following features:
+
+* Dominion-like card game engine
+* Turn-based game flow with strict phase control
+* REST API for game interaction (start game, play actions, buy cards)
+* Dynamic card effect system with stepwise execution
+* Support for pending choices during card resolution
+* Persistent game state via `DominionPersistence`
+* Multi-player support with active player validation
+* Deck, hand, discard, and supply pile management
+* Effect stack processing with interruptible resolution flow
 
 == Modulstruktur
 
