@@ -30,7 +30,7 @@ class Cellar: CardDefinition {
 
         return CardEffectDSL.effect(Card.CELLAR, initial) {
 
-            step { context, _ ->
+            step("Player needs to enter how many cards to discard.") { context, _ ->
                 CardEffect.pending(
                     Card.CELLAR,
                     context,
@@ -47,7 +47,7 @@ class Cellar: CardDefinition {
                 )
             }
 
-            step { context, answers ->
+            step("Player needs to choose which cards to discard") { context, answers ->
 
                 val count = answers.first().selectedOptions.first().toInt()
 
@@ -66,7 +66,7 @@ class Cellar: CardDefinition {
                 )
             }
 
-            step { context, answers ->
+            step("discard chosen cards and draw as many new cards") { context, answers ->
                 val selected = answers.first().selectedOptions
                 val cards = selected.map { Card.byName(it) }
                 val result = context.discard(cards)

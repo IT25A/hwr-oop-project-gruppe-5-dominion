@@ -1,13 +1,21 @@
 package hwr.oop.examples.template.core
 
 class CardEffectBuilder(
-    private val card: Card?
+    private val card: Card
 ) {
 
     private val steps = mutableListOf<EffectStep>()
 
-    fun step(block: EffectStep) = apply {
-        steps.add(block)
+    fun step(
+        description: String,
+        execute: (GameContext, List<AnsweredChoice>) -> CardEffect
+    ) = apply {
+        steps.add(
+            EffectStep(
+                description,
+                execute
+            )
+        )
     }
 
     fun build(context: GameContext): CardEffect {
