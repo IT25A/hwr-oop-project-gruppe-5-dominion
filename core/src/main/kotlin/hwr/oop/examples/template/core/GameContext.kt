@@ -12,10 +12,10 @@ class GameContext(
     }
 
     fun flush(): Game {
-        return Game(state, activePlayer, GamePhase.ActionPhase).updateState()
+        return Game.InActionPhase(state, activePlayer)
     }
 
     fun flush(effect: CardEffect): Game {
-        return Game(state, activePlayer, GamePhase.EffectActive, effect)
+        return Game.EffectActive(state, activePlayer, effect)
     }
 }

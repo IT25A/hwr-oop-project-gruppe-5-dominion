@@ -1,65 +1,93 @@
 package hwr.oop.examples.template.core
 
-import kotlin.collections.plus
+sealed interface Game {
+    val state: BoardState
+    val activePlayer: ActivePlayer
+    val activeEffect: CardEffect?
 
-class Game(
-    private val state: BoardState,
-    internal val activePlayer: ActivePlayer,
-    private val phase: GamePhase,
-    private val activeEffect: CardEffect? = null
-) {
+    fun piles(): Set<Pile> = state.piles()
 
-    fun piles() = state.piles()
-    fun players() = state.players + activePlayer.player
+    fun players(): List<Player> = state.players + activePlayer.player
+    fun nextPlayer(): Game
+    fun updateState(): Game
+    fun play(card: Card): Game = throw GameStatusException(this.toString(), "ActionPhase")
+    fun purchase(card: Card): Game = throw GameStatusException(this.toString(), "BuyPhase")
+    fun answer(answer: AnsweredChoice): Game = throw GameStatusException(this.toString(), "ActiveEffect")
 
-    fun nextPlayer(): Game{
-        return Game(state.nextState(activePlayer), ActivePlayer.create(state.nextPlayer()), GamePhase.ActionPhase)
-    }
+    override fun toString(): String
 
-    fun updateState(): Game{
-        return when(phase){
-            GamePhase.ActionPhase -> {
-                if(activePlayer.actions() > 0){
-                    this
-                } else {
-                    Game(state, activePlayer, GamePhase.BuyPhase)
-                }
+    class InActionPhase(
+        override val state: BoardState,
+        override val activePlayer: ActivePlayer,
+        override val activeEffect: CardEffect? = null
+    ) : Game {
+
+        override fun toString(): String = "ActionPhase"
+
+        override fun nextPlayer(): Game {
+            return InActionPhase(
+                state.nextState(activePlayer),
+                ActivePlayer.create(state.nextPlayer())
+            )
+        }
+
+        override fun updateState(): Game {
+            return if (activePlayer.actions() > 0) {
+                this
+            } else {
+                InPurchasePhase(state, activePlayer)
             }
+        }
 
-            GamePhase.BuyPhase -> {
-                if(activePlayer.buys() > 0){
-                    this
-                } else {
-                    nextPlayer()
-                }
+        override fun play(card: Card): Game {
+            return activePlayer.play(card, state)
+        }
+    }
+
+    class InPurchasePhase(
+        override val state: BoardState,
+        override val activePlayer: ActivePlayer,
+        override val activeEffect: CardEffect? = null
+    ) : Game {
+
+        override fun toString(): String = "BuyPhase"
+
+        override fun nextPlayer(): Game {
+            return InActionPhase(
+                state.nextState(activePlayer),
+                ActivePlayer.create(state.nextPlayer())
+            )
+        }
+
+        override fun updateState(): Game {
+            return if (activePlayer.buys() > 0) {
+                this
+            } else {
+                nextPlayer()
             }
+        }
 
-            else -> this
+        override fun purchase(card: Card): Game {
+            return state.purchase(activePlayer, card).updateState()
         }
     }
 
-    fun play(card: Card): Game {
-        if(phase !is GamePhase.ActionPhase){
-            throw GameStatusException(phase, GamePhase.ActionPhase)
-        }
-        return activePlayer.play(card, state)
-    }
+    class EffectActive(
+        override val state: BoardState,
+        override val activePlayer: ActivePlayer,
+        override val activeEffect: CardEffect
+    ) : Game {
 
-    fun purchase(card: Card): Game{
-        if(phase !is GamePhase.BuyPhase){
-            throw GameStatusException(phase, GamePhase.BuyPhase)
-        }
-        return state.purchase(activePlayer, card)
-    }
+        override fun toString(): String = "ActiveEffect"
 
-    fun answer(answer: AnsweredChoice): Game {
-        if (phase !is GamePhase.EffectActive) {
-            throw GameStatusException(phase, GamePhase.EffectActive)
+        override fun nextPlayer(): Game {
+            throw IllegalStateException("Cannot switch player during effect resolution")
         }
 
-        val effect = requireNotNull(activeEffect)
-        return effect.answer(GameContext(activePlayer, state),  answer)
+        override fun updateState(): Game = this
+
+        override fun answer(answer: AnsweredChoice): Game {
+            return activeEffect.answer(GameContext(activePlayer, state), answer)
+        }
     }
-
-
 }
