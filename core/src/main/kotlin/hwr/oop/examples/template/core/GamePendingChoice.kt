@@ -1,6 +1,6 @@
 package hwr.oop.examples.template.core
 
-data class PendingChoice(
+data class GamePendingChoice(
     val playerId: PlayerId,
     val choiceType: String,
     val description: String,

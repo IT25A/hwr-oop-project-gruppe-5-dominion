@@ -44,13 +44,13 @@ class PendingChoiceBuilder {
         this.maxSelections = max
     }
 
-    fun build(): PendingChoice {
+    fun build(): GamePendingChoice {
         require(playerId.value.isNotBlank()) { "playerId missing" }
         require(choiceType.isNotBlank()) { "choiceType missing" }
         require(options.isNotEmpty()) { "options missing" }
         require(minSelections <= maxSelections) { "invalid selection bounds" }
 
-        return PendingChoice(
+        return GamePendingChoice(
             playerId = playerId,
             choiceType = choiceType,
             description = description,

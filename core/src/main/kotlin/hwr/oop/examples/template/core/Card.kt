@@ -25,7 +25,7 @@ enum class Card (private val card: CardDefinition) {
         }
     }
 
-    fun stringName() = card.name
+    override fun toString() = card.name
 
     fun isAction(): Boolean {
         return card.types.contains(CardType.ACTION)

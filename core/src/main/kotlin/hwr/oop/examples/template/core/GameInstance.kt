@@ -7,7 +7,11 @@ class GameInstance(private val game: Game, private val id: String) {
     fun id() = id
 
     fun status(): String {
-        TODO("Not yet implemented")
+        if(game is Game.Finished) {
+            return "FINISHED"
+        }
+
+        return "IN_PROGRESS"
     }
 
     fun currentPlayerId(): String {
@@ -15,7 +19,7 @@ class GameInstance(private val game: Game, private val id: String) {
     }
 
     fun currentPhase(): String {
-        TODO("Not yet implemented")
+        return game.toString()
     }
 
     fun actionsRemaining(): Int {
@@ -38,8 +42,8 @@ class GameInstance(private val game: Game, private val id: String) {
         return game.players()
     }
 
-    fun effects() {
-        TODO("Not yet implemented")
+    fun effect(): CardEffect {
+        return game.effect()
     }
 
     fun isActivePlayer(playerId: String): Boolean {
@@ -48,6 +52,10 @@ class GameInstance(private val game: Game, private val id: String) {
 
     fun playAction(cardName: String): GameInstance{
         return GameInstance(game.play(Card.byName(cardName)), id)
+    }
+
+    fun choices(): List<GamePendingChoice>{
+        return game.pending()
     }
 
     fun playTreasures(cardNames: List<String>): GameInstance {
@@ -61,7 +69,7 @@ class GameInstance(private val game: Game, private val id: String) {
         return GameInstance(updated, id)
     }
 
-    fun purchase(): GameInstance{
+    fun purchase(cards: List<String>): GameInstance{
         return this
     }
 

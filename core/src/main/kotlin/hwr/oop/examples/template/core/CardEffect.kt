@@ -1,31 +1,27 @@
 package hwr.oop.examples.template.core
 
-typealias EffectStep =
-            (GameContext, List<AnsweredChoice>) -> CardEffect
-
 data class CardEffect(
-    val card: Card?,
+    val card: Card,
     private val context: GameContext,
     private val steps: List<EffectStep> = emptyList(),
     private val stepIndex: Int = 0,
-    val pending: List<PendingChoice> = emptyList(),
+    val pending: List<GamePendingChoice> = emptyList(),
     val answers: List<AnsweredChoice> = emptyList()
 ) {
+    fun remainingSteps(): List<EffectStep> = steps.drop(stepIndex)
+    fun instigatingPlayer() = context.player().id()
 
     fun execute(): Game {
-
-        // waiting for player input
         if (pending.isNotEmpty()) {
             return context.flush(this)
         }
 
-        // finished all steps
         if (stepIndex >= steps.size) {
             return context.flush()
         }
 
         val followingEffect = steps[stepIndex]
-        val next = followingEffect(context, answers)
+        val next = followingEffect.execute(context, answers)
 
         return next.copy(
             steps = steps,
@@ -54,7 +50,7 @@ data class CardEffect(
     companion object {
 
         fun stepwise(
-            card: Card?,
+            card: Card,
             context: GameContext,
             steps: List<EffectStep>
         ): CardEffect {
@@ -66,9 +62,9 @@ data class CardEffect(
         }
 
         fun pending(
-            card: Card?,
+            card: Card,
             context: GameContext,
-            pending: List<PendingChoice>
+            pending: List<GamePendingChoice>
         ): CardEffect {
             return CardEffect(
                 card = card,
@@ -77,7 +73,7 @@ data class CardEffect(
             )
         }
 
-        fun done(card: Card?, context: GameContext): CardEffect {
+        fun done(card: Card, context: GameContext): CardEffect {
             return CardEffect(card, context)
         }
     }

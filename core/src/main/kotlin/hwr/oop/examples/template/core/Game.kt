@@ -8,10 +8,12 @@ sealed interface Game {
     fun piles(): Set<Pile> = state.piles()
 
     fun players(): List<Player> = state.players + activePlayer.player
-    fun nextPlayer(): Game
-    fun updateState(): Game
+    fun nextPlayer(): Game = throw IllegalStateException("game has concluded")
+    fun updateState(): Game = throw IllegalStateException("game has concluded")
     fun play(card: Card): Game = throw GameStatusException(this.toString(), "ActionPhase")
     fun purchase(card: Card): Game = throw GameStatusException(this.toString(), "BuyPhase")
+    fun effect(): CardEffect = throw GameStatusException(this.toString(), "ActiveEffect")
+    fun pending(): List<GamePendingChoice> = throw GameStatusException(this.toString(), "ActiveEffect")
     fun answer(answer: AnsweredChoice): Game = throw GameStatusException(this.toString(), "ActiveEffect")
 
     override fun toString(): String
@@ -89,5 +91,20 @@ sealed interface Game {
         override fun answer(answer: AnsweredChoice): Game {
             return activeEffect.answer(GameContext(activePlayer, state), answer)
         }
+
+        override fun pending(): List<GamePendingChoice> {
+            return activeEffect.pending
+        }
+
+        override fun effect() = activeEffect
     }
+
+    class Finished(
+        override val state: BoardState,
+        override val activePlayer: ActivePlayer,
+        override val activeEffect: CardEffect? = null
+    ) : Game {
+        override fun toString(): String = throw IllegalStateException("game has concluded")
+    }
+
 }
