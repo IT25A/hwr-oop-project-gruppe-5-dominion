@@ -40,7 +40,7 @@ sealed interface Game {
         }
 
         override fun play(card: Card): Game {
-            return activePlayer.play(card, state)
+            return activePlayer.play(card, state).updateState()
         }
     }
 
