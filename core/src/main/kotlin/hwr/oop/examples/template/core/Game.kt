@@ -89,7 +89,7 @@ sealed interface Game {
         override fun updateState(): Game = this
 
         override fun answer(answer: AnsweredChoice): Game {
-            return activeEffect.answer(GameContext(activePlayer, state), answer)
+            return activeEffect.answer(GameContext(activePlayer.player, activePlayer.stats, state), answer)
         }
 
         override fun pending(): List<GamePendingChoice> {

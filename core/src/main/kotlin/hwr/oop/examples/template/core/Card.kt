@@ -18,7 +18,7 @@ enum class Card (private val card: CardDefinition) {
     FESTIVAL(Festival());
 
     companion object {
-        private val apiValues = entries.associateBy { it.name }
+        private val apiValues = entries.associateBy { it.toString() }
 
         fun byName(name: String): Card {
             return apiValues[name]?: throw NoSuchCardException(name)
@@ -38,7 +38,7 @@ enum class Card (private val card: CardDefinition) {
     fun play(player: Player, currentStats: Stats, state: BoardState): Game {
         val stats = currentStats.change(card.actions, card.buys, card.gold)
         val playerAfterDraw = player.draw(card.draw)
-        val context = GameContext(ActivePlayer(playerAfterDraw.use(this), stats), state)
+        val context = GameContext(playerAfterDraw.use(this), stats, state)
         val effect = card.getEffect(context)
         if(effect != null) {
             return effect.execute()

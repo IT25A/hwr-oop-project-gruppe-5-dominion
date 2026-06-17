@@ -28,12 +28,12 @@ class Cellar: CardDefinition {
                     context,
                     pending = listOf(
                         PendingChoiceBuilder()
-                            .playerId(context.player().id())
+                            .playerId(context.currentPlayerId())
                             .type("SELECT_NUMBER")
                             .description("How many cards to discard?")
                             .options((0..5).map { it.toString() })
-                            .min(1)
-                            .max(1)
+                            .min(0)
+                            .max(context.playerHandSize())
                             .build()
                     )
                 )
@@ -47,10 +47,10 @@ class Cellar: CardDefinition {
                     Card.CELLAR, context,
                     pending = listOf(
                             PendingChoiceBuilder()
-                                .playerId(context.player().id())
+                                .playerId(context.currentPlayerId())
                                 .type("SELECT_CARDS")
                                 .description("Choose cards to discard")
-                                .options(context.player().player.currentHand().map { it.name })
+                                .options(context.currentHand().map { it.name })
                                 .min(count)
                                 .max(count)
                                 .build()
@@ -62,7 +62,7 @@ class Cellar: CardDefinition {
                 val selected = answers.first().selectedOptions
                 val cards = selected.map { Card.byName(it) }
                 val result = context.discard(cards)
-                CardEffect.done(Card.CELLAR, result)
+                CardEffect.done(Card.CELLAR, result.draw(cards.size))
             }
         }
     }

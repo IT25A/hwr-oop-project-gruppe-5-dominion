@@ -48,4 +48,8 @@ class ActivePlayer(
         return ActivePlayer(player.discard(cards), stats)
     }
 
+    fun getContext(): Pair<Player, Stats> {
+        return Pair(player, stats)
+    }
+
 }

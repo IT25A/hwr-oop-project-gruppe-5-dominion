@@ -9,7 +9,7 @@ data class CardEffect(
     val answers: List<AnsweredChoice> = emptyList()
 ) {
     fun remainingSteps(): List<EffectStep> = steps.drop(stepIndex)
-    fun instigatingPlayer() = context.player().id()
+    fun instigatingPlayer() = context.currentPlayerId()
 
     fun execute(): Game {
         if (pending.isNotEmpty()) {
