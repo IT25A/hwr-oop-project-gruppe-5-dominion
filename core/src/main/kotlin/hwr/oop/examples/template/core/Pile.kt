@@ -1,7 +1,7 @@
 package hwr.oop.examples.template.core
 
 data class Pile(internal val card: Card, internal val quantity: Int){
-    fun name() = card.stringName()
+    fun name() = card.toString()
     fun count() = quantity
 
     fun draw(): Pile = copy(quantity = quantity - 1)

@@ -1,68 +1,110 @@
 package hwr.oop.examples.template.core
 
-import kotlin.collections.orEmpty
-import kotlin.collections.plus
+sealed interface Game {
+    val state: BoardState
+    val activePlayer: ActivePlayer
+    val activeEffect: CardEffect?
 
-class Game(
-    private val status: GameStatus,
-    private val state: BoardState,
-    internal val activePlayer: ActivePlayer) {
+    fun piles(): Set<Pile> = state.piles()
 
-    fun piles() = state.piles()
-    fun players() = state.players + activePlayer.player
+    fun players(): List<Player> = state.players + activePlayer.player
+    fun nextPlayer(): Game = throw IllegalStateException("game has concluded")
+    fun updateState(): Game = throw IllegalStateException("game has concluded")
+    fun play(card: Card): Game = throw GameStatusException(this.toString(), "ActionPhase")
+    fun purchase(card: Card): Game = throw GameStatusException(this.toString(), "BuyPhase")
+    fun effect(): CardEffect = throw GameStatusException(this.toString(), "ActiveEffect")
+    fun pending(): List<GamePendingChoice> = throw GameStatusException(this.toString(), "ActiveEffect")
+    fun answer(answer: AnsweredChoice): Game = throw GameStatusException(this.toString(), "ActiveEffect")
 
-    fun isRunning() = status is GameStatus.Running
+    override fun toString(): String
 
-    fun next(): Game{
-        requireGameRunning(status)
-        return Game(GameStatus.Running, state.nextState(activePlayer), ActivePlayer.create(state.nextPlayer()))
-    }
+    class InActionPhase(
+        override val state: BoardState,
+        override val activePlayer: ActivePlayer,
+        override val activeEffect: CardEffect? = null
+    ) : Game {
 
-    fun play(card: Card): Game {
-        requireGameRunning(status)
-        return when(val result = activePlayer.play(card, state)){
-            is PlayResult.Complete -> result.context.flush()
-            is PlayResult.WaitingForChoice -> Game(GameStatus.WaitingForChoice(result.card, result.choices), state, activePlayer)
+        override fun toString(): String = "ActionPhase"
+
+        override fun nextPlayer(): Game {
+            return InActionPhase(
+                state.nextState(activePlayer),
+                ActivePlayer.create(state.nextPlayer())
+            )
+        }
+
+        override fun updateState(): Game {
+            return if (activePlayer.actions() > 0) {
+                this
+            } else {
+                InPurchasePhase(state, activePlayer)
+            }
+        }
+
+        override fun play(card: Card): Game {
+            return activePlayer.play(card, state).updateState()
         }
     }
 
-    fun purchase(card: Card): Game{
-        requireGameRunning(status)
-        return state.purchase(activePlayer, card)
-    }
+    class InPurchasePhase(
+        override val state: BoardState,
+        override val activePlayer: ActivePlayer,
+        override val activeEffect: CardEffect? = null
+    ) : Game {
 
-    fun answer(answer: AnsweredChoice): Game{
-        require(status is GameStatus.WaitingForChoice)
-        val name = answer.playerID
-        val choices = status.choices[name] ?: throw NoPendingChoiceException(name)
-        choices.first().verify(answer)
+        override fun toString(): String = "BuyPhase"
 
-        val withAnswer = addAnswer(name, answer)
-        val withoutChoice = removeChoice(name)
-        if(withoutChoice.values.flatten().isEmpty()) {
-            val result = activePlayer.resume(status.card, state, withAnswer)
-            return result.context.flush()
+        override fun nextPlayer(): Game {
+            return InActionPhase(
+                state.nextState(activePlayer),
+                ActivePlayer.create(state.nextPlayer())
+            )
         }
 
-        return Game(GameStatus.WaitingForChoice(status.card, withoutChoice, withAnswer), state, activePlayer)
-    }
-
-    private fun addAnswer(name: String, answer: AnsweredChoice): Map<String,List<AnsweredChoice>> {
-        require(status is GameStatus.WaitingForChoice)
-        return status.answered + (
-                    name to (status.answered[name].orEmpty() + answer)
-                )
-    }
-
-    private fun removeChoice(name: String): Map<String, List<PendingChoice>> {
-        require(status is GameStatus.WaitingForChoice)
-        val choices = status.choices[name]?.drop(1)
-        val others = status.choices.filterNot { it.key == name }
-        if(choices.isNullOrEmpty()) {
-            return others
+        override fun updateState(): Game {
+            return if (activePlayer.buys() > 0) {
+                this
+            } else {
+                nextPlayer()
+            }
         }
 
-        return others + (name to choices)
+        override fun purchase(card: Card): Game {
+            return state.purchase(activePlayer, card).updateState()
+        }
+    }
+
+    class EffectActive(
+        override val state: BoardState,
+        override val activePlayer: ActivePlayer,
+        override val activeEffect: CardEffect
+    ) : Game {
+
+        override fun toString(): String = "ActiveEffect"
+
+        override fun nextPlayer(): Game {
+            throw IllegalStateException("Cannot switch player during effect resolution")
+        }
+
+        override fun updateState(): Game = this
+
+        override fun answer(answer: AnsweredChoice): Game {
+            return activeEffect.answer(GameContext(activePlayer.player, activePlayer.stats, state), answer)
+        }
+
+        override fun pending(): List<GamePendingChoice> {
+            return activeEffect.pending
+        }
+
+        override fun effect() = activeEffect
+    }
+
+    class Finished(
+        override val state: BoardState,
+        override val activePlayer: ActivePlayer,
+        override val activeEffect: CardEffect? = null
+    ) : Game {
+        override fun toString(): String = throw IllegalStateException("game has concluded")
     }
 
 }

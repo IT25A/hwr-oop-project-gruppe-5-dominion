@@ -1,6 +1,6 @@
 package hwr.oop.examples.template.core
 
-data class BoardState(val market: Market, val players: List<Player>){
+data class BoardState(val market: GameMarket, val players: List<Player>){
 
     fun piles() = market.piles
 
@@ -16,6 +16,6 @@ data class BoardState(val market: Market, val players: List<Player>){
     fun purchase(activePlayer: ActivePlayer, card: Card): Game {
         val result = market.purchase(activePlayer, card)
         val state = BoardState(result.market, players)
-        return Game(GameStatus.Running, state, result.player)
+        return Game.InPurchasePhase(state, result.player)
     }
 }

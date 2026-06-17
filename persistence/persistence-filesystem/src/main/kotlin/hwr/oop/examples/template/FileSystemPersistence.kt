@@ -8,7 +8,7 @@ import okio.FileSystem
 class FileSystemPersistence(
 	configuration: FileSystemPersistenceConfiguration,
 	private val fileSystem: FileSystem = FileSystem.SYSTEM,
-	private val games: Map<String, GameInstance>
+	private val games: Map<String, GameInstance> = emptyMap(),
 ) : DominionPersistence{
 
 	private val directory = configuration.directory

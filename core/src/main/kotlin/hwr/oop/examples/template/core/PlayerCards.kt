@@ -1,12 +1,15 @@
 package hwr.oop.examples.template.core
 
-val defaultInitialStock = List(4){ Card.COPPER } + List(3){ Card.ESTATE }
-
 class PlayerCards(private val stock: List<Card> = defaultInitialStock,
                   internal val discard: List<Card> = emptyList(),
                   internal val hand: List<Card> = emptyList(),
                   internal val used: List<Card> = emptyList())
 {
+
+    companion object {
+        val defaultInitialStock = List(4){ Card.COPPER } + List(3){ Card.ESTATE }
+    }
+
     fun endTurn(): PlayerCards {
         return PlayerCards(stock, discardedCards())
     }
@@ -60,6 +63,15 @@ class PlayerCards(private val stock: List<Card> = defaultInitialStock,
     fun inHand(card: Card): Boolean {
         return hand.contains(card)
     }
+
+    fun isValidSelection(selection: List<Card>): Boolean{
+        return hand.containsAllCopiesOf(selection)
+    }
+
+    fun removeSelection(selection: List<Card>): PlayerCards {
+        return PlayerCards(stock, discard + selection, hand.subtractCopiesOf(selection), used)
+    }
+
 
     fun handSize() = hand.size
     fun usedSize() = used.size

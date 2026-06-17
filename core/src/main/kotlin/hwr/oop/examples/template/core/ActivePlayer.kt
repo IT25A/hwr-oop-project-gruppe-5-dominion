@@ -14,21 +14,17 @@ class ActivePlayer(
     }
 
     fun actions() = stats.actions
-    fun purchases() = stats.purchases
+    fun buys() = stats.purchases
     fun coins() = stats.money
 
     fun id() = player.id
 
-    fun play(card: Card, game: BoardState): PlayResult {
+    fun play(card: Card, game: BoardState): Game {
         if(player.holds(card)) {
             return card.play(player, stats, game)
         }
 
         throw CardNotInHandException(card)
-    }
-
-    fun resume(card: Card, game: BoardState, answers: Map<String, List<AnsweredChoice>>): PlayResult.Complete {
-        return card.resume(GameContext(this, game), answers)
     }
 
     fun canAfford(cost: Int) = stats.money > cost
@@ -43,6 +39,14 @@ class ActivePlayer(
 
     fun endTurn(): Player {
         return player.endTurn()
+    }
+
+    fun discard(cards: List<Card>): ActivePlayer {
+        return ActivePlayer(player.discard(cards), stats)
+    }
+
+    fun getContext(): Pair<Player, Stats> {
+        return Pair(player, stats)
     }
 
 }

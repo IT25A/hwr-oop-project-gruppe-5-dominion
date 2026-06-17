@@ -7,15 +7,19 @@ class GameInstance(private val game: Game, private val id: String) {
     fun id() = id
 
     fun status(): String {
-        TODO("Not yet implemented")
+        if(game is Game.Finished) {
+            return "FINISHED"
+        }
+
+        return "IN_PROGRESS"
     }
 
     fun currentPlayerId(): String {
-        return game.activePlayer.id()
+        return game.activePlayer.id().value
     }
 
     fun currentPhase(): String {
-        TODO("Not yet implemented")
+        return game.toString()
     }
 
     fun actionsRemaining(): Int {
@@ -23,7 +27,7 @@ class GameInstance(private val game: Game, private val id: String) {
     }
 
     fun buysRemaining(): Int {
-        return game.activePlayer.purchases()
+        return game.activePlayer.buys()
     }
 
     fun coinsAvailable(): Int {
@@ -38,31 +42,34 @@ class GameInstance(private val game: Game, private val id: String) {
         return game.players()
     }
 
-    fun effects() {
-        TODO("Not yet implemented")
+    fun effect(): CardEffect {
+        return game.effect()
     }
 
     fun isActivePlayer(playerId: String): Boolean {
-        return game.activePlayer.id() == playerId
+        return game.activePlayer.id().value == playerId
     }
 
     fun playAction(cardName: String): GameInstance{
         return GameInstance(game.play(Card.byName(cardName)), id)
     }
 
+    fun choices(): List<GamePendingChoice>{
+        return game.pending()
+    }
+
     fun playTreasures(cardNames: List<String>): GameInstance {
         val cards = cardNames.map { Card.byName(it) }
         val updated = cards.fold(game) { current, card ->
-                requireTreasure(card)
-                val result = current.play(card)
-                if(!result.isRunning())
+                if(!card.isTreasure()){
                     throw NoTreasureException(card)
-                else result
+                }
+                current.play(card)
         }
         return GameInstance(updated, id)
     }
 
-    fun purchase(): GameInstance{
+    fun purchase(cards: List<String>): GameInstance{
         return this
     }
 
@@ -75,16 +82,16 @@ class GameInstance(private val game: Game, private val id: String) {
             players: List<String>,
             kingdomCards: List<String>
         ): GameInstance {
-            val players = players.map { Player(it, PlayerCards()) }
+            val players = players.map { Player(PlayerId(it), PlayerCards()) }
             val market = createMarket(kingdomCards)
             val state = BoardState(market, players.drop(1))
-            val game = Game(GameStatus.Running, state, ActivePlayer.create(players[0]))
+            val game = Game.InActionPhase(state, ActivePlayer.create(players[0]))
             val gId = UUID.randomUUID().toString()
             return GameInstance(game, gId)
         }
 
-        private fun createMarket(kingdomCards: List<String>): Market {
-            return Market(emptySet())
+        private fun createMarket(kingdomCards: List<String>): GameMarket {
+            return GameMarket(kingdomCards.map { Pile(Card.byName(it), 10) }.toSet())
         }
     }
 

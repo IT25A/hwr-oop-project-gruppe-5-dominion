@@ -1,6 +1,6 @@
 package hwr.oop.examples.template.core
 
-class Market(internal val piles: Set<Pile>, private val emptyPiles: Int = 0) {
+class GameMarket(internal val piles: Set<Pile>, private val emptyPiles: Int = 0) {
     fun emptyPiles(required: Int) = emptyPiles >= required
 
     fun piles(predicate: (Card) -> Boolean) = piles.filter{ predicate(it.card) }
@@ -10,7 +10,7 @@ class Market(internal val piles: Set<Pile>, private val emptyPiles: Int = 0) {
         return PurchaseResult(drawFrom(pile), activePlayer.purchase(pile.card))
     }
 
-    fun drawFrom(pile: Pile): Market {
+    fun drawFrom(pile: Pile): GameMarket {
         val pileAfterDraw = pile.draw()
 
         if(pileAfterDraw.isEmpty()){
@@ -20,11 +20,11 @@ class Market(internal val piles: Set<Pile>, private val emptyPiles: Int = 0) {
         return replacePile(pile, pileAfterDraw)
     }
 
-    private fun removePile(pile: Pile): Market{
-        return Market(piles - pile, emptyPiles + 1)
+    private fun removePile(pile: Pile): GameMarket{
+        return GameMarket(piles - pile, emptyPiles + 1)
     }
 
-    private fun replacePile(pile: Pile, newPile: Pile): Market {
-        return Market(piles - pile + newPile)
+    private fun replacePile(pile: Pile, newPile: Pile): GameMarket {
+        return GameMarket(piles - pile + newPile)
     }
 }
