@@ -33,15 +33,15 @@ class CellarTest: CardTest(Card.CELLAR, 0, 1, 0, 0) {
 
         val result1 = Card.CELLAR.play(player, stats, state)
 
+        val result2 = result1.answer(AnsweredChoice(id, listOf("1")))
+
+        val result3 = result2.answer(AnsweredChoice(id, listOf("Copper")))
+
         assertThat(result1).isInstanceOf(Game.EffectActive::class.java)
         assertThat(result1.pending().size).isEqualTo(1)
 
-        val result2 = result1.answer(AnsweredChoice(id, listOf("1")))
-
         assertThat(result2).isInstanceOf(Game.EffectActive::class.java)
         assertThat(result2.pending().size).isEqualTo(1)
-
-        val result3 = result2.answer(AnsweredChoice(id, listOf("Copper")))
 
         assertThat(result3).isInstanceOf(Game.InActionPhase::class.java)
         assertThat(result3.activePlayer.player.cards.hand).isEqualTo(listOf(Card.COPPER, Card.ESTATE))
