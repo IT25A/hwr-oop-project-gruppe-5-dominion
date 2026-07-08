@@ -1,5 +1,7 @@
 package hwr.oop.examples.template.core
 
+import hwr.oop.examples.template.core.GamePhases.DominionPurchasePhase
+
 data class BoardState(val market: GameMarket, val players: List<Player>){
 
     fun piles() = market.piles
@@ -16,6 +18,6 @@ data class BoardState(val market: GameMarket, val players: List<Player>){
     fun purchase(activePlayer: ActivePlayer, card: Card): GamePhase {
         val result = market.purchase(activePlayer, card)
         val state = BoardState(result.market, players)
-        return GamePhase.InPurchasePhase(state, result.player)
+        return DominionPurchasePhase(state, result.player)
     }
 }

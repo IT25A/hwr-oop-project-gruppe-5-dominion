@@ -1,5 +1,6 @@
 package hwr.oop.examples.template.core
 
+import hwr.oop.examples.template.core.GamePhases.DominionActionPhase
 import java.util.UUID
 
 class GameInstance(private val game: GamePhase, private val id: String) {
@@ -43,7 +44,19 @@ class GameInstance(private val game: GamePhase, private val id: String) {
     }
 
     fun effect(): CardEffect {
+        if(game !is GamePhase.PendingEffectPhase  ) {
+            throw IllegalStateException("Game is not in PendingEffectPhase")
+        }
+
         return game.effect()
+    }
+
+    fun choices(): List<GamePendingChoice>{
+        if(game !is GamePhase.PendingEffectPhase){
+            throw IllegalStateException("No choices exist while not in PendingEffectPhase")
+        }
+
+        return game.pending()
     }
 
     fun isActivePlayer(playerId: String): Boolean {
@@ -51,20 +64,24 @@ class GameInstance(private val game: GamePhase, private val id: String) {
     }
 
     fun playAction(cardName: String): GameInstance{
+        if(game !is GamePhase.ActionPhase ) {
+            throw IllegalStateException("Cannot play action while not in ActionPhase")
+        }
+
         return GameInstance(game.play(Card.byName(cardName)), id)
     }
 
-    fun choices(): List<GamePendingChoice>{
-        return game.pending()
-    }
-
     fun playTreasures(cardNames: List<String>): GameInstance {
+        if(game !is GamePhase.ActionPhase ) {
+            throw IllegalStateException("Cannot play action while not in ActionPhase")
+        }
+
         val cards = cardNames.map { Card.byName(it) }
         val updated = cards.fold(game) { current, card ->
                 if(!card.isTreasure()){
                     throw NoTreasureException(card)
                 }
-                current.play(card)
+                current.play(card) as GamePhase.ActionPhase
         }
         return GameInstance(updated, id)
     }
@@ -74,6 +91,10 @@ class GameInstance(private val game: GamePhase, private val id: String) {
     }
 
     fun makeChoice(answer: AnsweredChoice): GameInstance{
+        if(game !is GamePhase.PendingEffectPhase ) {
+            throw IllegalStateException("Cannot make choice while not in PendingEffectPhase")
+        }
+
         return GameInstance(game.answer(answer), id)
     }
 
@@ -85,7 +106,7 @@ class GameInstance(private val game: GamePhase, private val id: String) {
             val players = players.map { Player(PlayerId(it), PlayerCards()) }
             val market = createMarket(kingdomCards)
             val state = BoardState(market, players.drop(1))
-            val game = GamePhase.InActionPhase(state, ActivePlayer.create(players[0]))
+            val game = DominionActionPhase(state, ActivePlayer.create(players[0]))
             val gId = UUID.randomUUID().toString()
             return GameInstance(game, gId)
         }

@@ -28,8 +28,6 @@ data class CardEffect(
             stepIndex = stepIndex + 1).execute()
     }
 
-
-
     fun answer(
         context: GameContext,
         answer: AnsweredChoice
