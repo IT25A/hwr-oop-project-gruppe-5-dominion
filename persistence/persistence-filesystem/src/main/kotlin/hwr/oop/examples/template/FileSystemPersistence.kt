@@ -1,7 +1,6 @@
 package hwr.oop.examples.template
 
 import hwr.oop.examples.template.core.DominionPersistence
-import hwr.oop.examples.template.core.Game
 import hwr.oop.examples.template.core.GameInstance
 import okio.FileSystem
 

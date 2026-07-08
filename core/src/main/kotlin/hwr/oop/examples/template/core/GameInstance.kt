@@ -2,12 +2,12 @@ package hwr.oop.examples.template.core
 
 import java.util.UUID
 
-class GameInstance(private val game: Game, private val id: String) {
+class GameInstance(private val game: GamePhase, private val id: String) {
 
     fun id() = id
 
     fun status(): String {
-        if(game is Game.Finished) {
+        if(game is GamePhase.Finished) {
             return "FINISHED"
         }
 
@@ -85,7 +85,7 @@ class GameInstance(private val game: Game, private val id: String) {
             val players = players.map { Player(PlayerId(it), PlayerCards()) }
             val market = createMarket(kingdomCards)
             val state = BoardState(market, players.drop(1))
-            val game = Game.InActionPhase(state, ActivePlayer.create(players[0]))
+            val game = GamePhase.InActionPhase(state, ActivePlayer.create(players[0]))
             val gId = UUID.randomUUID().toString()
             return GameInstance(game, gId)
         }

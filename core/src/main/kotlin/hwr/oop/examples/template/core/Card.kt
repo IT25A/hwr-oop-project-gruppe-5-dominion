@@ -35,7 +35,7 @@ enum class Card (private val card: CardDefinition) {
         return card.types.contains(CardType.TREASURE)
     }
 
-    fun play(player: Player, currentStats: Stats, state: BoardState): Game {
+    fun play(player: Player, currentStats: Stats, state: BoardState): GamePhase {
         val stats = currentStats.change(card.actions, card.buys, card.gold)
         val playerAfterDraw = player.draw(card.draw)
         val context = GameContext(playerAfterDraw.use(this), stats, state)

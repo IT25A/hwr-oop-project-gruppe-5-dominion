@@ -19,11 +19,11 @@ class GameContext(
         return GameContext(activePlayer.discard(cards),activePlayerStats , state)
     }
 
-    fun flush(): Game {
-        return Game.InActionPhase(state, ActivePlayer(activePlayer, activePlayerStats))
+    fun flush(): GamePhase {
+        return GamePhase.InActionPhase(state, ActivePlayer(activePlayer, activePlayerStats))
     }
 
-    fun flush(effect: CardEffect): Game {
-        return Game.EffectActive(state, ActivePlayer(activePlayer, activePlayerStats), effect)
+    fun flush(effect: CardEffect): GamePhase {
+        return GamePhase.EffectActive(state, ActivePlayer(activePlayer, activePlayerStats), effect)
     }
 }

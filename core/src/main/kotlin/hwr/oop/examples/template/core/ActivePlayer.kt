@@ -19,7 +19,7 @@ class ActivePlayer(
 
     fun id() = player.id
 
-    fun play(card: Card, game: BoardState): Game {
+    fun play(card: Card, game: BoardState): GamePhase {
         if(player.holds(card)) {
             return card.play(player, stats, game)
         }

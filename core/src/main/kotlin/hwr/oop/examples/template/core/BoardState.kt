@@ -13,9 +13,9 @@ data class BoardState(val market: GameMarket, val players: List<Player>){
         return players[0]
     }
 
-    fun purchase(activePlayer: ActivePlayer, card: Card): Game {
+    fun purchase(activePlayer: ActivePlayer, card: Card): GamePhase {
         val result = market.purchase(activePlayer, card)
         val state = BoardState(result.market, players)
-        return Game.InPurchasePhase(state, result.player)
+        return GamePhase.InPurchasePhase(state, result.player)
     }
 }
