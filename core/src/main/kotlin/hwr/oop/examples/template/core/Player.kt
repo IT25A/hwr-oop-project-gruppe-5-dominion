@@ -13,7 +13,7 @@ data class Player(internal val id: PlayerId, internal val cards: PlayerCards){
     }
 
     fun endTurn(): Player {
-        return Player(id, cards.endTurn())
+        return Player(id, cards.discard())
     }
 
     fun use(card: Card): Player {

@@ -25,6 +25,6 @@ class GameMarket(internal val piles: Set<Pile>, private val emptyPiles: Int = 0)
     }
 
     private fun replacePile(pile: Pile, newPile: Pile): GameMarket {
-        return GameMarket(piles - pile + newPile)
+        return GameMarket(piles - pile + newPile, emptyPiles)
     }
 }
