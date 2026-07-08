@@ -9,7 +9,7 @@ import hwr.oop.examples.template.SqlPersistence
 import hwr.oop.examples.template.config.AppConfig
 import hwr.oop.examples.template.config.ConfigLoader
 import hwr.oop.examples.template.config.PersistenceType
-import hwr.oop.examples.template.core.DominionPersistence
+import hwr.oop.examples.dominion.DominionPersistence
 import okio.Path.Companion.toPath
 
 class ExampleBaseCommand : CliktCommand(name = "example") {
@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
 		.main(args)
 }
 
-private fun buildPersistence(appConfig: AppConfig): DominionPersistence {
+private fun buildPersistence(appConfig: AppConfig): hwr.oop.examples.dominion.DominionPersistence {
 	return when (appConfig.persistence) {
 		PersistenceType.SQL -> SqlPersistence(
 			appConfig.sql.jdbcUrl,
