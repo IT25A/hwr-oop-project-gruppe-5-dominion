@@ -1,8 +1,8 @@
 package hwr.oop.examples.template
 
 import com.zaxxer.hikari.HikariDataSource
-import hwr.oop.examples.template.core.DominionPersistence
-import hwr.oop.examples.template.core.GameInstance
+import hwr.oop.examples.dominion.DominionPersistence
+import hwr.oop.examples.dominion.GameInstance
 import liquibase.Liquibase
 import liquibase.Scope
 import liquibase.database.DatabaseFactory
