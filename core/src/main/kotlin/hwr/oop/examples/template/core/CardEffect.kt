@@ -11,7 +11,7 @@ data class CardEffect(
     fun remainingSteps(): List<EffectStep> = steps.drop(stepIndex)
     fun instigatingPlayer() = context.currentPlayerId()
 
-    fun execute(): Game {
+    fun execute(): GamePhase {
         if (pending.isNotEmpty()) {
             return context.flush(this)
         }
@@ -28,12 +28,10 @@ data class CardEffect(
             stepIndex = stepIndex + 1).execute()
     }
 
-
-
     fun answer(
         context: GameContext,
         answer: AnsweredChoice
-    ): Game {
+    ): GamePhase {
 
         val updated = CardEffect(
             card = card,

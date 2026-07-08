@@ -1,5 +1,8 @@
 package hwr.oop.examples.template.core
 
+import hwr.oop.examples.template.core.GamePhases.DominionActionPhase
+import hwr.oop.examples.template.core.GamePhases.DominionPendingEffectPhase
+
 class GameContext(
     private val activePlayer: Player,
     private val activePlayerStats: Stats,
@@ -19,11 +22,11 @@ class GameContext(
         return GameContext(activePlayer.discard(cards),activePlayerStats , state)
     }
 
-    fun flush(): Game {
-        return Game.InActionPhase(state, ActivePlayer(activePlayer, activePlayerStats))
+    fun flush(): GamePhase {
+        return DominionActionPhase(state, ActivePlayer(activePlayer, activePlayerStats))
     }
 
-    fun flush(effect: CardEffect): Game {
-        return Game.EffectActive(state, ActivePlayer(activePlayer, activePlayerStats), effect)
+    fun flush(effect: CardEffect): GamePhase {
+        return DominionPendingEffectPhase(state, ActivePlayer(activePlayer, activePlayerStats), effect)
     }
 }
