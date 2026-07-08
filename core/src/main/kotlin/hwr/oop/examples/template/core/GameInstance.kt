@@ -1,7 +1,9 @@
 package hwr.oop.examples.template.core
 
+import kotlinx.serialization.Serializable
 import java.util.UUID
 
+@Serializable
 class GameInstance(private val game: Game, private val id: String) {
 
     fun id() = id
@@ -12,6 +14,7 @@ class GameInstance(private val game: Game, private val id: String) {
 
     fun currentPlayerId(): String {
         return game.activePlayer.id()
+
     }
 
     fun currentPhase(): String {

@@ -1,5 +1,8 @@
 package hwr.oop.examples.template.core
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Pile(internal val card: Card, internal val quantity: Int){
     fun name() = card.stringName()
     fun count() = quantity

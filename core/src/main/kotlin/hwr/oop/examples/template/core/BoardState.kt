@@ -1,5 +1,8 @@
 package hwr.oop.examples.template.core
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class BoardState(val market: Market, val players: List<Player>){
 
     fun piles() = market.piles

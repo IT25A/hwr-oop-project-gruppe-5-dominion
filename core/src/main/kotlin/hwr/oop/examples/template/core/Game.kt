@@ -1,8 +1,10 @@
 package hwr.oop.examples.template.core
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializer
 import kotlin.collections.orEmpty
 import kotlin.collections.plus
-
+@Serializable
 class Game(
     private val status: GameStatus,
     private val state: BoardState,

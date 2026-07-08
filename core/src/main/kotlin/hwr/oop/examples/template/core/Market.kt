@@ -1,5 +1,8 @@
 package hwr.oop.examples.template.core
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 class Market(internal val piles: Set<Pile>, private val emptyPiles: Int = 0) {
     fun emptyPiles(required: Int) = emptyPiles >= required
 
