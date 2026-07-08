@@ -22,5 +22,4 @@ class DominionPendingEffectPhase(
     override fun answer(answer: AnsweredChoice): GamePhase {
         return activeEffect.answer(GameContext(activePlayer.player, activePlayer.stats, state), answer)
     }
-
 }

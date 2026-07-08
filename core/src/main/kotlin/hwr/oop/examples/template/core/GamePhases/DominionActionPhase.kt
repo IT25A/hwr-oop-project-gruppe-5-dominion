@@ -11,13 +11,6 @@ class DominionActionPhase(
 ) : GamePhase.ActionPhase {
     override fun toString(): String = "ActionPhase"
 
-    override fun nextPlayer(): GamePhase {
-        return DominionActionPhase(
-            state.nextState(activePlayer),
-            ActivePlayer.create(state.nextPlayer())
-        )
-    }
-
     override fun updateState(): GamePhase {
         return if (activePlayer.actions() > 0){
             this

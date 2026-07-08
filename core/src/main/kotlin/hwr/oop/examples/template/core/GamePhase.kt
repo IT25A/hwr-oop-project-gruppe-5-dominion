@@ -10,7 +10,6 @@ sealed interface GamePhase {
     fun piles() = state.piles()
 
     interface ActionPhase : GamePhase {
-        fun nextPlayer(): GamePhase
         fun updateState(): GamePhase
 
         fun play(card: Card): GamePhase
