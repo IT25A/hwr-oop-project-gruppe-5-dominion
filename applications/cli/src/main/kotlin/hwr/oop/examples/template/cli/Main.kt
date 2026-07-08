@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
 		.main(args)
 }
 
-private fun buildPersistence(appConfig: AppConfig): hwr.oop.examples.dominion.DominionPersistence {
+private fun buildPersistence(appConfig: AppConfig): DominionPersistence {
 	return when (appConfig.persistence) {
 		PersistenceType.SQL -> SqlPersistence(
 			appConfig.sql.jdbcUrl,
