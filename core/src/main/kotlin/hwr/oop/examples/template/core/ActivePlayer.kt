@@ -30,6 +30,9 @@ class ActivePlayer(
     fun canAfford(cost: Int) = stats.money > cost
 
     fun purchase(card: Card): ActivePlayer {
+        if(stats.purchases < 1){
+            throw PurchaseException("not enough buys")
+        }
         if(canAfford(card.cost())){
             return ActivePlayer(player.insert(card), stats.change(0, -1, -card.cost()))
         }
