@@ -31,7 +31,7 @@ class DrawTest {
     }
 
     @Test
-    fun `drawing with an empty deck reshuffels discard`() {
+    fun `drawing with an empty deck reshuffles discard`() {
         //given
         val deck = emptyList<Card>()
         val discard = List(5){Card.COPPER}
@@ -52,7 +52,7 @@ class DrawTest {
         //given
         val cards = PlayerCards()
         //when
-        val newCards =cards.draw(0)
+        val newCards = cards.draw(0)
         //then
         assertThat(newCards.stock).hasSize(10)
         assertThat(newCards.discard).hasSize(0)

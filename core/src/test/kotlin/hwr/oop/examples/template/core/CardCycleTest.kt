@@ -88,7 +88,7 @@ class CardCycleTest {
             discard = listOf(Card.ESTATE)
         )
 
-        val result = cards.endTurn()
+        val result = cards.discard()
 
         assertEquals(3, result.discardSize())
         assertEquals(1, result.stockSize())

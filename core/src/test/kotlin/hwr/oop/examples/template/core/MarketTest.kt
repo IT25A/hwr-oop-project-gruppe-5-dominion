@@ -7,16 +7,16 @@ import org.junit.jupiter.api.Test
 
 class MarketTest {
 
-    val richPlayer = ActivePlayer(Player("richPlayer", PlayerCards()), Stats(0, 2, 10))
-    val poorPlayer = ActivePlayer(Player("poorPlayer", PlayerCards()), Stats(0, 1, 0))
-    val sadPlayer = ActivePlayer(Player("sadPlayer", PlayerCards()), Stats(0, 0, 20))
-    val market = Market(setOf(Pile(Card.COPPER, 1), Pile(Card.ESTATE, 3)))
+    val richPlayer = ActivePlayer(Player(PlayerId("richPlayer"), PlayerCards()), Stats(0, 2, 10))
+    val poorPlayer = ActivePlayer(Player(PlayerId("poorPlayer"), PlayerCards()), Stats(0, 1, 0))
+    val sadPlayer = ActivePlayer(Player(PlayerId("sadPlayer"), PlayerCards()), Stats(0, 0, 20))
+    val market = GameMarket(setOf(Pile(Card.COPPER, 1), Pile(Card.ESTATE, 3)))
 
     @Test
     fun `only existing cards can be bought`() {
         //when
         assertThatThrownBy{
-            market.purchase(richPlayer, Card.TEST)
+            market.purchase(richPlayer, Card.VILLAGE)
         }
             .isInstanceOf(PurchaseException::class.java)
             .hasMessageContaining("no such pile")
