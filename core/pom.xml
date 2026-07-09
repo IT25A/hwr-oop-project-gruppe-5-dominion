@@ -67,6 +67,12 @@
           <targetTests>
             <param>hwr.oop.*</param>
           </targetTests>
+          <excludedClasses>
+            <param>**$$serializer</param>
+          </excludedClasses>
+          <excludedMethods>
+            <param>write$Self</param>
+          </excludedMethods>
         </configuration>
         <dependencies>
           <dependency>
