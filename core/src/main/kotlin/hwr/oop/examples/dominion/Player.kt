@@ -32,6 +32,8 @@ data class Player(internal val id: PlayerId, internal val cards: PlayerCards){
         return cards.discard
     }
 
+    fun isSamePlayerAs(other: PlayerId) = other == id
+
     fun discard(selection: List<Card>): Player {
         if(cards.isValidSelection(selection)) {
             return Player(id, cards.removeSelection(selection))

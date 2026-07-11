@@ -26,6 +26,8 @@ class ActivePlayer(
         throw CardNotInHandException(card)
     }
 
+    fun isSamePlayerAs(other: PlayerId) = player.isSamePlayerAs(other)
+
     fun canAfford(cost: Int) = stats.money > cost
 
     fun purchase(card: Card): ActivePlayer {
