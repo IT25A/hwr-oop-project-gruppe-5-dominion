@@ -1,14 +1,14 @@
 package hwr.oop.examples.template.service
 
-import hwr.oop.examples.template.core.AnsweredChoice
-import hwr.oop.examples.template.core.CardEffect
-import hwr.oop.examples.template.core.DominionPersistence
-import hwr.oop.examples.template.core.EffectStep
-import hwr.oop.examples.template.core.GameInstance
-import hwr.oop.examples.template.core.GamePendingChoice
-import hwr.oop.examples.template.core.Pile
-import hwr.oop.examples.template.core.Player
-import hwr.oop.examples.template.core.PlayerId
+import hwr.oop.examples.dominion.AnsweredChoice
+import hwr.oop.examples.dominion.DominionPersistence
+import hwr.oop.examples.dominion.CardEffect
+import hwr.oop.examples.dominion.EffectStep
+import hwr.oop.examples.dominion.GameInstance
+import hwr.oop.examples.dominion.GamePendingChoice
+import hwr.oop.examples.dominion.Pile
+import hwr.oop.examples.dominion.Player
+import hwr.oop.examples.dominion.PlayerId
 import hwr.oop.examples.template.service.api.GameActionApi
 import hwr.oop.examples.template.service.api.GameApi
 import hwr.oop.examples.template.service.model.*
