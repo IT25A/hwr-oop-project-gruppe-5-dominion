@@ -9,7 +9,6 @@ import hwr.oop.examples.template.SqlPersistence
 import hwr.oop.examples.template.config.AppConfig
 import hwr.oop.examples.template.config.ConfigLoader
 import hwr.oop.examples.template.config.PersistenceType
-import hwr.oop.examples.dominion.DominionPersistence
 import okio.Path.Companion.toPath
 
 class ExampleBaseCommand : CliktCommand(name = "example") {
