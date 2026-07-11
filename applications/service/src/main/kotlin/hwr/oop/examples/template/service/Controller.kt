@@ -90,9 +90,7 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(buyCardsRequest != null) { "buyCardsRequest is required" }
 
-        val game = persistence.load(gameId)
-        require(game.isActivePlayer(buyCardsRequest.playerId)) { "player ${buyCardsRequest.playerId} is not the active player" }
-        buyCardsRequest.cardsToBuy
+        val game = persistence.load(gameId).validate(buyCardsRequest.playerId)
 
         return map(game.purchase(buyCardsRequest.cardsToBuy))
     }
@@ -127,11 +125,9 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(makeChoiceRequest != null) { "makeChoiceRequest must not be null" }
 
-        val game = persistence.load(gameId)
-        require(game.isActivePlayer(makeChoiceRequest.playerId)) { "player ${makeChoiceRequest.playerId} is not the active player" }
+        val game = persistence.load(gameId).validate(makeChoiceRequest.playerId)
 
-        val result =
-            game.makeChoice(AnsweredChoice(PlayerId(makeChoiceRequest.playerId), makeChoiceRequest.selectedOptions))
+        val result = game.makeChoice(AnsweredChoice(PlayerId(makeChoiceRequest.playerId), makeChoiceRequest.selectedOptions))
         return map(result)
     }
 
@@ -142,11 +138,9 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(playActionRequest != null) { "playActionRequest is required" }
 
-        val game = persistence.load(gameId)
-        require(game.isActivePlayer(playActionRequest.playerId)) { "player ${playActionRequest.playerId} is not the active player" }
+        val game = persistence.load(gameId).validate(playActionRequest.playerId)
 
         val result = game.playAction(playActionRequest.cardName)
-
         return map(result)
     }
 
@@ -157,8 +151,7 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(playTreasuresRequest != null) { "playTreasuresRequest is required" }
 
-        val game = persistence.load(gameId)
-        require(game.isActivePlayer(playTreasuresRequest.playerId)) { "player ${playTreasuresRequest.playerId} is not the active player" }
+        val game = persistence.load(gameId).validate(playTreasuresRequest.playerId)
 
         val result = game.playTreasures(playTreasuresRequest.cardNames)
         return map(result)
