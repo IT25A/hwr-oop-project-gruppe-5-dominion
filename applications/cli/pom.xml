@@ -27,10 +27,6 @@
       <groupId>hwr.oop.lecture.examples</groupId>
       <artifactId>persistence-filesystem</artifactId>
     </dependency>
-    <dependency>
-      <groupId>hwr.oop.lecture.examples</groupId>
-      <artifactId>persistence-sql</artifactId>
-    </dependency>
 
     <!-- External dependencies -->
     <dependency>

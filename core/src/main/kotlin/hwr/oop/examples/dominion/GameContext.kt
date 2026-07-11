@@ -2,7 +2,9 @@ package hwr.oop.examples.dominion
 
 import hwr.oop.examples.dominion.GamePhases.DominionActionPhase
 import hwr.oop.examples.dominion.GamePhases.DominionPendingEffectPhase
+import kotlinx.serialization.Serializable
 
+@Serializable
 class GameContext(
     private val activePlayer: Player,
     private val activePlayerStats: Stats,

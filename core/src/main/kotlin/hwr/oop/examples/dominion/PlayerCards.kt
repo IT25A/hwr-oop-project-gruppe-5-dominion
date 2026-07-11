@@ -1,6 +1,9 @@
 package hwr.oop.examples.dominion
 
-class PlayerCards(private val stock: List<Card> = List(4){ Card.COPPER } + List(3){ Card.ESTATE },
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class PlayerCards(internal val stock: List<Card> = List(7){ Card.COPPER } + List(3){ Card.ESTATE },
                   internal val discard: List<Card> = emptyList(),
                   internal val hand: List<Card> = emptyList(),
                   internal val used: List<Card> = emptyList())

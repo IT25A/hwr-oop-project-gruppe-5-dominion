@@ -16,6 +16,5 @@
 
   <modules>
     <module>persistence-filesystem</module>
-    <module>persistence-sql</module>
   </modules>
 </project>

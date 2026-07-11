@@ -1,5 +1,8 @@
 package hwr.oop.examples.dominion
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Pile(internal val card: Card, internal val quantity: Int){
     fun name() = card.toString()
     fun count() = quantity

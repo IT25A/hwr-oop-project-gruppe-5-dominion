@@ -1,6 +1,9 @@
 package hwr.oop.examples.dominion
 
-class GameMarket(internal val piles: Set<Pile>, private val emptyPiles: Int = 0) {
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class GameMarket(internal val piles: Set<Pile>, private val emptyPiles: Int = 0) {
     fun emptyPiles(required: Int) = emptyPiles >= required
 
     fun piles(predicate: (Card) -> Boolean) = piles.filter{ predicate(it.card) }
@@ -27,4 +30,5 @@ class GameMarket(internal val piles: Set<Pile>, private val emptyPiles: Int = 0)
     private fun replacePile(pile: Pile, newPile: Pile): GameMarket {
         return GameMarket(piles - pile + newPile, emptyPiles)
     }
+
 }

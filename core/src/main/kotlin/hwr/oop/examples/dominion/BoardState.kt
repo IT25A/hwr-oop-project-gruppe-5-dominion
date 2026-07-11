@@ -1,7 +1,9 @@
 package hwr.oop.examples.dominion
 
 import hwr.oop.examples.dominion.GamePhases.DominionPurchasePhase
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class BoardState(val market: GameMarket, val players: List<Player>){
 
     fun piles() = market.piles
