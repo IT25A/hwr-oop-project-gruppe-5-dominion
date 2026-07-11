@@ -7,8 +7,10 @@ import hwr.oop.examples.dominion.CardEffect
 import hwr.oop.examples.dominion.GameContext
 import hwr.oop.examples.dominion.GamePendingChoice
 import hwr.oop.examples.dominion.GamePhase
+import kotlinx.serialization.Serializable
 
-class DominionPendingEffectPhase(
+@Serializable
+data class DominionPendingEffectPhase(
     override val state: BoardState,
     override val activePlayer: ActivePlayer,
     override val activeEffect: CardEffect

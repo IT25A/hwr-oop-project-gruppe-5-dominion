@@ -1,6 +1,9 @@
 package hwr.oop.examples.dominion
 
-class ActivePlayer(
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class ActivePlayer(
     internal val player: Player,
     internal val stats: Stats)
 {

@@ -1,14 +1,16 @@
 package hwr.oop.examples.template.service
 
-import hwr.oop.examples.template.core.AnsweredChoice
-import hwr.oop.examples.template.core.CardEffect
-import hwr.oop.examples.template.core.DominionPersistence
-import hwr.oop.examples.template.core.EffectStep
-import hwr.oop.examples.template.core.GameInstance
-import hwr.oop.examples.template.core.GamePendingChoice
-import hwr.oop.examples.template.core.Pile
-import hwr.oop.examples.template.core.Player
-import hwr.oop.examples.template.core.PlayerId
+import hwr.oop.examples.dominion.AnsweredChoice
+import hwr.oop.examples.dominion.CardEffect
+import hwr.oop.examples.dominion.DominionPersistence
+import hwr.oop.examples.dominion.EffectStep
+import hwr.oop.examples.dominion.GameID
+import hwr.oop.examples.dominion.GameInstance
+import hwr.oop.examples.dominion.GamePendingChoice
+import hwr.oop.examples.dominion.Pile
+import hwr.oop.examples.dominion.Player
+import hwr.oop.examples.dominion.PlayerId
+import hwr.oop.examples.dominion.ports.out.GameRepository
 import hwr.oop.examples.template.service.api.GameActionApi
 import hwr.oop.examples.template.service.api.GameApi
 import hwr.oop.examples.template.service.model.*
@@ -18,18 +20,18 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class Controller(
-    val persistence: DominionPersistence
+    val persistence: GameRepository
 ) : GameApi, GameActionApi {
 
     override fun getGame(gameId: String?): ResponseEntity<GameState> {
         require(gameId != null) { "Game ID is null" }
-        val game = persistence.load(gameId)
+        val game = persistence.loadByid(gameId)
         return map(game)
     }
 
     private fun map(game: GameInstance): ResponseEntity<GameState> {
         val state = GameState(
-            /* gameId = */ game.id(),
+            /* gameId = */ game.id().value,
             /* status = */ game.status(),
             /* currentPlayerId = */ game.currentPlayerId(),
             /* currentPhase = */ game.currentPhase(),
@@ -80,7 +82,7 @@ class Controller(
         val kingdomCards = startGameRequest.kingdomCards
         val game = GameInstance.create(players.toList(), kingdomCards.toList())
         persistence.save(game)
-        return ResponseEntity.ok(GameCreatedResponse(game.id()))
+        return ResponseEntity.ok(GameCreatedResponse(game.id().value))
     }
 
     override fun buyCard(
@@ -90,7 +92,7 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(buyCardsRequest != null) { "buyCardsRequest is required" }
 
-        val game = persistence.load(gameId)
+        val game = persistence.loadByid(gameId)
         require(game.isActivePlayer(buyCardsRequest.playerId)) { "player ${buyCardsRequest.playerId} is not the active player" }
         buyCardsRequest.cardsToBuy
 
@@ -110,7 +112,7 @@ class Controller(
 
     override fun getChoices(gameId: String?): ResponseEntity<PendingChoicesResponse> {
         require(gameId != null) { "Game ID is required" }
-        val game = persistence.load(gameId)
+        val game = persistence.loadByid(gameId)
 
         val choices = game.choices()
         val pendingChoices = choices.map {
@@ -127,7 +129,7 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(makeChoiceRequest != null) { "makeChoiceRequest must not be null" }
 
-        val game = persistence.load(gameId)
+        val game = persistence.loadByid(gameId)
         require(game.isActivePlayer(makeChoiceRequest.playerId)) { "player ${makeChoiceRequest.playerId} is not the active player" }
 
         val result =
@@ -142,7 +144,7 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(playActionRequest != null) { "playActionRequest is required" }
 
-        val game = persistence.load(gameId)
+        val game = persistence.loadByid(gameId)
         require(game.isActivePlayer(playActionRequest.playerId)) { "player ${playActionRequest.playerId} is not the active player" }
 
         val result = game.playAction(playActionRequest.cardName)
@@ -157,7 +159,7 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(playTreasuresRequest != null) { "playTreasuresRequest is required" }
 
-        val game = persistence.load(gameId)
+        val game = persistence.loadByid(gameId)
         require(game.isActivePlayer(playTreasuresRequest.playerId)) { "player ${playTreasuresRequest.playerId} is not the active player" }
 
         val result = game.playTreasures(playTreasuresRequest.cardNames)

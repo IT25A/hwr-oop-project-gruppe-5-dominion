@@ -1,5 +1,8 @@
 package hwr.oop.examples.dominion
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class GamePendingChoice(
     val playerId: PlayerId,
     val choiceType: String,

@@ -1,8 +1,10 @@
 package hwr.oop.examples.dominion
 import hwr.oop.examples.dominion.GamePhases.DominionActionPhase
+import kotlinx.serialization.Serializable
 import java.util.UUID
 
-class GameInstance(private val game: GamePhase, private val id: GameID) {
+@Serializable
+data class GameInstance(private val game: GamePhase, private val id: GameID) {
 
     fun id()= id
 
