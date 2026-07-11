@@ -1,6 +1,7 @@
 package hwr.oop.examples.template.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
 import hwr.oop.examples.template.FileSystemPersistence
@@ -20,9 +21,12 @@ fun main(args: Array<String>) {
 	val appConfig = ConfigLoader.load()
 	val persistence = buildPersistence(appConfig)
 	ExampleBaseCommand()
+		.context {
+			persistence
+		}
 		.subcommands(
 			StartGameCommand(),
-			OnGameIdCommand().subcommands(
+			OnGameIdCommand(persistence).subcommands(
 				GetGameCommand(),
 				PlayActionCommand(),
 				PlayTreasuresCommand(),
