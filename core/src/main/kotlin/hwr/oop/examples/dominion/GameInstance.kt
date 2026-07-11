@@ -59,10 +59,6 @@ class GameInstance(private val game: GamePhase, private val id: String) {
         return game.pending()
     }
 
-    fun isActivePlayer(playerId: String): Boolean {
-        return game.activePlayer.id().value == playerId
-    }
-
     fun playAction(cardName: String): GameInstance{
         if(game !is GamePhase.ActionPhase ) {
             throw IllegalStateException("Cannot play action while not in ActionPhase")
@@ -76,7 +72,7 @@ class GameInstance(private val game: GamePhase, private val id: String) {
             throw IllegalStateException("Cannot play action while not in ActionPhase")
         }
 
-        val cards = cardNames.map { Card.byName(it) }
+        val cards = Card.byNames(cardNames)
         val updated = cards.fold(game) { current, card ->
                 if(!card.isTreasure()){
                     throw NoTreasureException(card)
@@ -86,8 +82,16 @@ class GameInstance(private val game: GamePhase, private val id: String) {
         return GameInstance(updated, id)
     }
 
-    fun purchase(cards: List<String>): GameInstance{
-        return this
+    fun purchase(cardNames: List<String>): GameInstance{
+        if(game !is GamePhase.PurchasePhase ) {
+            throw IllegalStateException("Cannot buy cards while not in PurchasePhase")
+        }
+
+        val cards = Card.byNames(cardNames)
+        val updated = cards.fold(game) { current, card ->
+            current.purchase(card) as GamePhase.PurchasePhase
+        }
+        return GameInstance(updated.updateState(), id)
     }
 
     fun makeChoice(answer: AnsweredChoice): GameInstance{
@@ -96,6 +100,19 @@ class GameInstance(private val game: GamePhase, private val id: String) {
         }
 
         return GameInstance(game.answer(answer), id)
+    }
+
+    fun validate(requestingPlayer: PlayerId? = null): GameInstance {
+        if(game is GamePhase.ActiveGamePhase) {
+            require(requestingPlayer != null) { "cannot run active game phase when requestingPlayer is null" }
+            require(game.isActivePlayer(requestingPlayer)) { "player ${requestingPlayer.value} is not the active player" }
+        }
+
+        return this
+    }
+
+    fun validate(requestingPlayer: String): GameInstance {
+        return validate(PlayerId(requestingPlayer))
     }
 
     companion object{
