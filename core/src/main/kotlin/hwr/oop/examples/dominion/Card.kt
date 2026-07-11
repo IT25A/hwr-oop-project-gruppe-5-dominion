@@ -20,6 +20,8 @@ enum class Card (private val card: CardDefinition) {
     companion object {
         private val apiValues = entries.associateBy { it.toString() }
 
+        fun byNames(cardNames: List<String>) = cardNames.map { byName(it) }
+
         fun byName(name: String): Card {
             return apiValues[name]?: throw NoSuchCardException(name)
         }
