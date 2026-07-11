@@ -11,25 +11,25 @@ sealed interface GamePhase {
 
     interface ActionPhase : GamePhase {
         fun updateState(): GamePhase
-
         fun play(card: Card): GamePhase
     }
 
     interface PurchasePhase : GamePhase {
         fun nextPlayer(): GamePhase
         fun updateState(): GamePhase
-
         fun purchase(card: Card): GamePhase
     }
 
     interface PendingEffectPhase : GamePhase {
-        fun updateState(): GamePhase = this
-
         val activeEffect: CardEffect
 
         fun effect(): CardEffect
         fun pending(): List<GamePendingChoice>
         fun answer(answer: AnsweredChoice): GamePhase
+    }
+
+    interface ActiveGamePhase : GamePhase {
+        fun isActivePlayer(playerId: PlayerId): Boolean
     }
 
     interface Finished : GamePhase
