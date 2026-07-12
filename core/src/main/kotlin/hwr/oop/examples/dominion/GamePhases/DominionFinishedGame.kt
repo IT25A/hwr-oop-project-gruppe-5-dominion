@@ -7,6 +7,6 @@ class DominionFinishedGame(override val winner: PlayerId) : GamePhase.Finished {
     override fun toString() = "DominionFinishedGame"
 
     override fun nextPhase(): GamePhase {
-        TODO("Not yet implemented")
+        throw IllegalStateException("Game has been finished! Thank u for playing our game")
     }
 }
