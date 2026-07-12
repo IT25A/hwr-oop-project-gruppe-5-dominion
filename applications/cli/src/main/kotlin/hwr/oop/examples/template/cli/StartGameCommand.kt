@@ -21,6 +21,9 @@ class StartGameCommand(
 	).multiple(required = true)
 	
 	override fun run() {
+		require(kingdomCards.size == 10){ "exactly 10 kingdom cards are required" }
+		require(playerIds.size in 2..4){ "2-4 players are required" }
+
 		val game = GameInstance.create(playerIds, kingdomCards)
 		persistence.save(game)
 		echo("Create game with ID: ${game.id().value}")

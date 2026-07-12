@@ -3,24 +3,24 @@ package hwr.oop.examples.dominion
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Player(internal val id: PlayerId, internal val cards: PlayerCards){
+data class Player(internal val id: PlayerId, internal val cards: PlayerCards = PlayerCards(), val wasFirst: Boolean = false){
 
     fun id() = id
 
     fun insert(card: Card): Player {
-        return Player(id, cards.insert(card))
+        return Player(id, cards.insert(card), wasFirst)
     }
 
     fun draw(count: Int): Player {
-        return Player(id, cards.draw(count))
+        return Player(id, cards.draw(count), wasFirst)
     }
 
     fun endTurn(): Player {
-        return Player(id, cards.discard().draw(5))
+        return Player(id, cards.discard().draw(5), wasFirst)
     }
 
     fun use(card: Card): Player {
-        return Player(id, cards.use(card))
+        return Player(id, cards.use(card), wasFirst)
     }
 
     fun currentHand(): List<Card> {
@@ -39,7 +39,7 @@ data class Player(internal val id: PlayerId, internal val cards: PlayerCards){
 
     fun discard(selection: List<Card>): Player {
         if(cards.isValidSelection(selection)) {
-            return Player(id, cards.removeSelection(selection))
+            return Player(id, cards.removeSelection(selection), wasFirst)
         }
 
         throw InvalidSelectionException()
@@ -53,6 +53,9 @@ data class Player(internal val id: PlayerId, internal val cards: PlayerCards){
         return cards.inHand(card)
     }
 
+    fun calculatePoints(state: BoardState): Int{
+        return cards.all().sumOf { it.calculatePoints(this, state) }
+    }
 
 
 }

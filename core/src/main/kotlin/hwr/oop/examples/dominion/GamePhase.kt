@@ -47,6 +47,7 @@ sealed interface GamePhase {
         fun buysRemaining() = activePlayer.buys()
         fun currentPlayer() = activePlayer.id()
 
+        fun currentPlayersPoints() = activePlayer.points(state)
     }
 
     interface Finished : GamePhase{

@@ -22,7 +22,7 @@ class FileSystemPersistenceTest {
 		)
 	}
 
-	private val game = Fixture.game()
+	private val game = Fixture.actionPhaseGame()
 	private val gameId = game.id()
 
 	@Test

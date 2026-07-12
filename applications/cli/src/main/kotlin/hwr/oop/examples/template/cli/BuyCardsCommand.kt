@@ -2,8 +2,10 @@ package hwr.oop.examples.template.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.requireObject
+import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.multiple
 import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.options.optionalValue
 import com.github.ajalt.clikt.parameters.options.required
 import hwr.oop.examples.dominion.GameInstance
 
@@ -20,8 +22,9 @@ class BuyCardsCommand : CliktCommand(name = "buyCards") {
 	override fun run() {
 		instance = ctx.loadGame()
 		instance.validate(playerId)
-		if(cardsToBuy.isEmpty()) {
+		if(cardsToBuy.all { it.isBlank() }) {
 			ctx.saveGame(instance.skipPhase())
+			return
 		}
 		try {
 			ctx.saveGame(instance.purchase(cardsToBuy))

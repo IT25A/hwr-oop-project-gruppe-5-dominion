@@ -162,13 +162,14 @@ data class GameInstance(private val game: GamePhase, private val id: GameID) {
 
     companion object{
         fun create(
-            players: List<String>,
+            playerIds: List<String>,
             kingdomCards: List<String>
         ): GameInstance {
-            val players = players.map { Player(PlayerId(it), PlayerCards()) }
+            val players = playerIds.drop(1).map { Player(PlayerId(it)) }
+            val startingPlayer = Player(PlayerId(playerIds[0]), wasFirst = true)
             val market = createMarket(kingdomCards)
-            val state = BoardState(market, players.drop(1))
-            val game = DominionActionPhase(state, ActivePlayer.create(players[0].draw(5)))
+            val state = BoardState(market, players)
+            val game = DominionActionPhase(state, ActivePlayer.create(startingPlayer.draw(5)))
             return GameInstance(game, GameID.random())
         }
 

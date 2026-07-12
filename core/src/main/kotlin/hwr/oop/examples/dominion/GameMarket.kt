@@ -13,6 +13,8 @@ data class GameMarket(internal val piles: Set<Pile>, private val emptyPiles: Int
         return PurchaseResult(drawFrom(pile), activePlayer.purchase(pile.card))
     }
 
+    fun gameEndingRequirementMet() = emptyPiles >= 3
+
     fun drawFrom(pile: Pile): GameMarket {
         val pileAfterDraw = pile.draw()
 

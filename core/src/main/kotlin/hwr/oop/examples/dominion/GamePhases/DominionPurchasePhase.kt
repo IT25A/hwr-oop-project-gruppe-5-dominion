@@ -15,9 +15,15 @@ data class DominionPurchasePhase(
     override fun toString() = "PurchasePhase"
 
     override fun nextPhase(): GamePhase {
+        val next = state.nextPlayer()
+        if(state.gameEndingRequirementMet() && next.wasFirst){
+            val pointsPerPlayer = players().map { it.id() to it.calculatePoints(state) }.sortedByDescending { it.second }
+            return DominionFinishedGame(pointsPerPlayer[0].first)
+        }
+
         return DominionActionPhase(
             state.nextState(activePlayer),
-            ActivePlayer.create(state.nextPlayer())
+            ActivePlayer.create(next)
         )
     }
 

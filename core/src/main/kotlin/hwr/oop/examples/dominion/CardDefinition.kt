@@ -10,6 +10,7 @@ interface CardDefinition {
     val gold: Int
     val points: Int
 
+    fun customPointFunction(ctx: GameContext): Int = 0
     fun getEffect(initial: GameContext): CardEffect? {
         return null
     }

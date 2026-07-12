@@ -54,4 +54,10 @@ enum class Card (private val card: CardDefinition) {
 
     fun cost() = card.cost
     fun types() = card.types
+
+    fun calculatePoints(player: Player, state: BoardState): Int {
+        val stats = Stats(0, 0, 0)
+        val ctx = GameContext(player, stats, state)
+        return card.customPointFunction(ctx) + card.points
+    }
 }

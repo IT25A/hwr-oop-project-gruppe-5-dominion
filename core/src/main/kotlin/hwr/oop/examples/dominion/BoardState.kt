@@ -22,4 +22,6 @@ data class BoardState(val market: GameMarket, val players: List<Player>){
         val state = BoardState(result.market, players)
         return DominionPurchasePhase(state, result.player)
     }
+
+    fun gameEndingRequirementMet() = market.gameEndingRequirementMet()
 }
