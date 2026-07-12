@@ -1,4 +1,5 @@
 package hwr.oop.examples.dominion
+
 fun<T> List<T>.containsAllCopiesOf(other: List<T>): Boolean {
     val counts = groupingBy { it }.eachCount().toMutableMap()
 

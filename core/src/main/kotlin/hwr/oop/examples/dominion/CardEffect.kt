@@ -1,18 +1,33 @@
 package hwr.oop.examples.dominion
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 @Serializable
 data class CardEffect(
     val card: Card,
-    private val context: GameContext,
-    private val steps: List<EffectStep> = emptyList(),
+    private val context: GameContext ,
+    @Transient
+    internal val steps: List<EffectStep> = emptyList(),
+
     private val stepIndex: Int = 0,
     val pending: List<GamePendingChoice> = emptyList(),
     val answers: List<AnsweredChoice> = emptyList()
 ) {
     fun remainingSteps(): List<EffectStep> = steps.drop(stepIndex)
     fun instigatingPlayer() = context.currentPlayerId()
+
+    fun restoreSteps(): CardEffect {
+        val originalEffect = card.effect(context)!!
+
+        return copy(
+            steps = originalEffect.steps
+        )
+    }
+
+    fun hasActiveChoice(player: PlayerId) : Boolean {
+        return pending.any { it.playerId == player }
+    }
 
     fun execute(): GamePhase {
         if (pending.isNotEmpty()) {
@@ -70,7 +85,7 @@ data class CardEffect(
             return CardEffect(
                 card = card,
                 context = context,
-                pending = pending
+                pending = pending,
             )
         }
 

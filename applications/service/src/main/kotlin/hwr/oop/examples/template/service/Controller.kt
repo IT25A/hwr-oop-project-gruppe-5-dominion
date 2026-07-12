@@ -2,9 +2,6 @@ package hwr.oop.examples.template.service
 
 import hwr.oop.examples.dominion.AnsweredChoice
 import hwr.oop.examples.dominion.CardEffect
-import hwr.oop.examples.dominion.DominionPersistence
-import hwr.oop.examples.dominion.EffectStep
-import hwr.oop.examples.dominion.GameID
 import hwr.oop.examples.dominion.GameInstance
 import hwr.oop.examples.dominion.GamePendingChoice
 import hwr.oop.examples.dominion.Pile
@@ -33,7 +30,7 @@ class Controller(
         val state = GameState(
             /* gameId = */ game.id().value,
             /* status = */ game.status(),
-            /* currentPlayerId = */ game.currentPlayerId(),
+            /* currentPlayerId = */ game.currentPlayerId().value,
             /* currentPhase = */ game.currentPhase(),
             /* actionsRemaining = */ game.actionsRemaining(),
             /* buysRemaining = */ game.buysRemaining(),
@@ -92,9 +89,7 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(buyCardsRequest != null) { "buyCardsRequest is required" }
 
-        val game = persistence.loadByid(gameId)
-        require(game.isActivePlayer(buyCardsRequest.playerId)) { "player ${buyCardsRequest.playerId} is not the active player" }
-        buyCardsRequest.cardsToBuy
+        val game = persistence.loadByid(gameId).validate(buyCardsRequest.playerId)
 
         return map(game.purchase(buyCardsRequest.cardsToBuy))
     }
@@ -129,11 +124,9 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(makeChoiceRequest != null) { "makeChoiceRequest must not be null" }
 
-        val game = persistence.loadByid(gameId)
-        require(game.isActivePlayer(makeChoiceRequest.playerId)) { "player ${makeChoiceRequest.playerId} is not the active player" }
+        val game = persistence.loadByid(gameId).validate(makeChoiceRequest.playerId)
 
-        val result =
-            game.makeChoice(AnsweredChoice(PlayerId(makeChoiceRequest.playerId), makeChoiceRequest.selectedOptions))
+        val result = game.makeChoice(AnsweredChoice(PlayerId(makeChoiceRequest.playerId), makeChoiceRequest.selectedOptions))
         return map(result)
     }
 
@@ -144,11 +137,9 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(playActionRequest != null) { "playActionRequest is required" }
 
-        val game = persistence.loadByid(gameId)
-        require(game.isActivePlayer(playActionRequest.playerId)) { "player ${playActionRequest.playerId} is not the active player" }
+        val game = persistence.loadByid(gameId).validate(playActionRequest.playerId)
 
         val result = game.playAction(playActionRequest.cardName)
-
         return map(result)
     }
 
@@ -159,8 +150,7 @@ class Controller(
         require(gameId != null) { "Game ID is required" }
         require(playTreasuresRequest != null) { "playTreasuresRequest is required" }
 
-        val game = persistence.loadByid(gameId)
-        require(game.isActivePlayer(playTreasuresRequest.playerId)) { "player ${playTreasuresRequest.playerId} is not the active player" }
+        val game = persistence.loadByid(gameId).validate(playTreasuresRequest.playerId)
 
         val result = game.playTreasures(playTreasuresRequest.cardNames)
         return map(result)

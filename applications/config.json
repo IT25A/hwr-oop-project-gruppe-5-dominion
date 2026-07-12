@@ -1,7 +1,7 @@
 {
 	"persistence": "FILE_SYSTEM",
 	"fileSystem": {
-		"directory": "./data"
+		"directory": "./games"
 	},
 	"sql": {
 		"jdbcUrl": "jdbc:postgresql://localhost:5432/template_db",

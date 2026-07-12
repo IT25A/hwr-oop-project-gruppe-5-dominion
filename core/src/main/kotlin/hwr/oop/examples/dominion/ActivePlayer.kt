@@ -29,6 +29,8 @@ data class ActivePlayer(
         throw CardNotInHandException(card)
     }
 
+    fun isSamePlayerAs(other: PlayerId) = player.isSamePlayerAs(other)
+
     fun canAfford(cost: Int) = stats.money > cost
 
     fun purchase(card: Card): ActivePlayer {
@@ -50,8 +52,6 @@ data class ActivePlayer(
         return ActivePlayer(player.discard(cards), stats)
     }
 
-    fun getContext(): Pair<Player, Stats> {
-        return Pair(player, stats)
-    }
+    fun hand() = player.currentHand()
 
 }

@@ -41,6 +41,7 @@ class CellarTest: CardTest(Card.CELLAR, 0, 1, 0, 0) {
         assertThat((result2 as GamePhase.PendingEffectPhase).pending().size).isEqualTo(1)
 
         val result3 = result2.answer(AnsweredChoice(id, listOf("Copper")))
+        require(result3 is GamePhase.ActiveGamePhase)
 
         assertThat(result3).isInstanceOf(GamePhase.ActionPhase::class.java)
         assertThat(result3.activePlayer.player.cards.hand).isEqualTo(listOf(Card.COPPER, Card.ESTATE))

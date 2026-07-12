@@ -4,37 +4,53 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed interface GamePhase {
-    val state: BoardState
-    val activePlayer: ActivePlayer
 
     override fun toString(): String
 
-    fun players() = state.players + activePlayer.player
-    fun piles() = state.piles()
+    fun nextPhase(): GamePhase
 
     interface ActionPhase : GamePhase {
         fun updateState(): GamePhase
-
         fun play(card: Card): GamePhase
     }
 
     interface PurchasePhase : GamePhase {
-        fun nextPlayer(): GamePhase
         fun updateState(): GamePhase
-
         fun purchase(card: Card): GamePhase
     }
 
     interface PendingEffectPhase : GamePhase {
-        fun updateState(): GamePhase = this
-
         val activeEffect: CardEffect
+
+        fun hasActiveChoice(player: PlayerId): Boolean
+
+        fun restoreEffect(): GamePhase
 
         fun effect(): CardEffect
         fun pending(): List<GamePendingChoice>
+        fun firstChoiceFor(playerId: PlayerId): GamePendingChoice
         fun answer(answer: AnsweredChoice): GamePhase
     }
 
-    interface Finished : GamePhase
+    abstract class ActiveGamePhase : GamePhase {
+        abstract val state: BoardState
+        abstract val activePlayer: ActivePlayer
+
+        abstract fun isActivePlayer(playerId: PlayerId): Boolean
+
+        fun players() = state.players + activePlayer.player
+        fun piles() = state.piles()
+        fun currentPlayersHand() = activePlayer.hand()
+
+        fun actionsRemaining() = activePlayer.actions()
+        fun coinsAvailable() = activePlayer.coins()
+        fun buysRemaining() = activePlayer.buys()
+        fun currentPlayer() = activePlayer.id()
+
+    }
+
+    interface Finished : GamePhase{
+        val winner: PlayerId
+    }
 
 }

@@ -18,10 +18,12 @@ enum class Card (private val card: CardDefinition) {
     FESTIVAL(Festival());
 
     companion object {
-        private val apiValues = entries.associateBy { it.toString() }
+        private val apiValues = entries.associateBy { it.toString().lowercase() }
+
+        fun byNames(cardNames: List<String>) = cardNames.map { byName(it) }
 
         fun byName(name: String): Card {
-            return apiValues[name]?: throw NoSuchCardException(name)
+            return apiValues[name.lowercase()]?: throw NoSuchCardException(name)
         }
     }
 
@@ -36,7 +38,8 @@ enum class Card (private val card: CardDefinition) {
     }
 
     fun play(player: Player, currentStats: Stats, state: BoardState): GamePhase {
-        val stats = currentStats.change(card.actions, card.buys, card.gold)
+        val newActions = card.actions - if(isAction()) 1 else 0
+        val stats = currentStats.change(newActions, card.buys, card.gold)
         val playerAfterDraw = player.draw(card.draw)
         val context = GameContext(playerAfterDraw.use(this), stats, state)
         val effect = card.getEffect(context)
@@ -46,6 +49,8 @@ enum class Card (private val card: CardDefinition) {
 
         return context.flush()
     }
+
+    fun effect(context: GameContext) = card.getEffect(context)
 
     fun cost() = card.cost
     fun types() = card.types

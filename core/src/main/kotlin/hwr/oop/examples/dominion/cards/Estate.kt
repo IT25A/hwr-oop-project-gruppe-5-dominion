@@ -5,7 +5,7 @@ import hwr.oop.examples.dominion.CardType
 
 class Estate: CardDefinition {
     override val types: List<CardType> = listOf(CardType.POINTS)
-    override val name: String = "estate"
+    override val name: String = "Estate"
     override val cost: Int = 2
     override val draw: Int = 0
     override val actions: Int = 0

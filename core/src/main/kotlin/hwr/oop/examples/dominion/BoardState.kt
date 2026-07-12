@@ -10,7 +10,7 @@ data class BoardState(val market: GameMarket, val players: List<Player>){
 
     fun nextState(activePlayer: ActivePlayer): BoardState{
         val player = activePlayer.endTurn()
-        return BoardState(market, players.drop(1) + player.draw(5))
+        return BoardState(market, players.drop(1) + player)
     }
 
     fun nextPlayer(): Player {
