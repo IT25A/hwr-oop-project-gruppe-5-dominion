@@ -1,7 +1,6 @@
 package hwr.oop.examples.template.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
 import hwr.oop.examples.dominion.ports.out.GameRepository
@@ -12,18 +11,22 @@ import hwr.oop.examples.template.config.ConfigLoader
 import hwr.oop.examples.template.config.PersistenceType
 import okio.Path.Companion.toPath
 
-class ExampleBaseCommand : CliktCommand(name = "example") {
-	override fun run() = Unit
+class BaseCommand : CliktCommand(name = "example") {
+	override fun run() {
+		echo("Welcome to Dominion.")
+	}
 }
 
 fun main(args: Array<String>) {
 	val appConfig = ConfigLoader.load()
 	val persistence = buildPersistence(appConfig)
-	ExampleBaseCommand()
+	BaseCommand()
 		.subcommands(
-			StartGameCommand(),
+			StartGameCommand(persistence),
 			OnGameIdCommand(persistence).subcommands(
 				GetGameCommand(),
+				GetHandCommand(),
+				SkipPhaseCommand(),
 				PlayActionCommand(),
 				PlayTreasuresCommand(),
 				BuyCardsCommand(),

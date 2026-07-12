@@ -14,7 +14,7 @@ data class DominionPurchasePhase(
 ) : GamePhase.PurchasePhase, GamePhase.ActiveGamePhase() {
     override fun toString() = "PurchasePhase"
 
-    override fun nextPlayer(): GamePhase {
+    override fun nextPhase(): GamePhase {
         return DominionActionPhase(
             state.nextState(activePlayer),
             ActivePlayer.create(state.nextPlayer())
@@ -25,7 +25,7 @@ data class DominionPurchasePhase(
         return if(activePlayer.buys() > 0){
             this
         } else {
-            nextPlayer()
+            nextPhase()
         }
     }
 

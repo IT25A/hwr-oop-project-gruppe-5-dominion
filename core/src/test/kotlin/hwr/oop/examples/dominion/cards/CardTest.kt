@@ -3,6 +3,7 @@ package hwr.oop.examples.dominion.cards
 import hwr.oop.examples.dominion.BoardState
 import hwr.oop.examples.dominion.Card
 import hwr.oop.examples.dominion.GameMarket
+import hwr.oop.examples.dominion.GamePhase
 import hwr.oop.examples.dominion.Player
 import hwr.oop.examples.dominion.PlayerCards
 import hwr.oop.examples.dominion.PlayerId
@@ -17,6 +18,7 @@ open class CardTest(val card: Card, val expectedDraws: Int,val expectedActions: 
         val market = GameMarket(emptySet())
         val state = BoardState(market, emptyList())
         val result = card.play(player, Stats(0, 0, 0), state)
+        require(result is GamePhase.ActiveGamePhase)
         val activePlayer = result.activePlayer
 
         assertThat(activePlayer.player.currentHand().size).isEqualTo(expectedDraws)

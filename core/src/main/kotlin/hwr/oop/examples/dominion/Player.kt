@@ -16,7 +16,7 @@ data class Player(internal val id: PlayerId, internal val cards: PlayerCards){
     }
 
     fun endTurn(): Player {
-        return Player(id, cards.discard())
+        return Player(id, cards.discard().draw(5))
     }
 
     fun use(card: Card): Player {

@@ -40,10 +40,10 @@ class FileSystemPersistence(
 	override fun save(game: GameInstance) {
 		val gameId= game.id()
 		val path = path(gameId)
-		fileSystem.write(path){
+		val mustWrite = !fileSystem.exists(path)
+		fileSystem.write(path, mustWrite){
 			writeUtf8(json.encodeToString<GameInstance>(game))
 		}
-
 	}
 
 	override fun loadByid(gameId: GameID): GameInstance {
@@ -55,7 +55,7 @@ class FileSystemPersistence(
 		} catch (e: FileNotFoundException) {
 			throw LoadGameByIdPort.CouldNotLoadException(gameId, e)
 		}
-		return json.decodeFromString<GameInstance>(readString)
+		return json.decodeFromString<GameInstance>(readString).restoreEffect()
 	}
 
 	private fun path(gameId: GameID): Path {

@@ -13,7 +13,7 @@ class  CliFileSystemTest {
 	private val fakeFileSystem = FakeFileSystem()
 	private val tempDir = "/tmp/cli-fs-test".toPath()
 	private lateinit var persistence: FileSystemPersistence
-	private lateinit var sut: ExampleBaseCommand
+	private lateinit var sut: BaseCommand
 	
 	@BeforeEach
 	fun setUp() {
@@ -23,7 +23,7 @@ class  CliFileSystemTest {
 			FileSystemPersistenceConfiguration(tempDir),
 			fakeFileSystem
 		)
-		sut = ExampleBaseCommand()
+		sut = BaseCommand()
 	}
 	
 	@AfterEach
