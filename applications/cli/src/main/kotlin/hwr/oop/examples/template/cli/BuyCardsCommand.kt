@@ -22,6 +22,7 @@ class BuyCardsCommand : CliktCommand(name = "buyCards") {
 		instance.validate(playerId)
 		if(cardsToBuy.isEmpty()) {
 			ctx.saveGame(instance.skipPhase())
+			return
 		}
 		try {
 			ctx.saveGame(instance.purchase(cardsToBuy))
