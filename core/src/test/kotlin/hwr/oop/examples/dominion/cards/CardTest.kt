@@ -5,6 +5,7 @@ import hwr.oop.examples.dominion.BoardState
 import hwr.oop.examples.dominion.Card
 import hwr.oop.examples.dominion.GameMarket
 import hwr.oop.examples.dominion.GamePhase
+import hwr.oop.examples.dominion.Pile
 import hwr.oop.examples.dominion.Player
 import hwr.oop.examples.dominion.PlayerCards
 import hwr.oop.examples.dominion.PlayerId
@@ -23,7 +24,7 @@ open class CardTest(
 ) {
 
     private val player = Player(PlayerId("player"), PlayerCards(stock = emptyList(), hand = listOf(card)))
-    private val market = GameMarket(emptySet())
+    private val market = GameMarket(setOf(Pile(card, 1)))
     private val state = BoardState(market, emptyList())
 
     fun playTest() {
