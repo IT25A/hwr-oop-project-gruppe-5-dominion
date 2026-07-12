@@ -3,7 +3,7 @@ import hwr.oop.examples.dominion.GamePhases.DominionActionPhase
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GameInstance(private val game: GamePhase, private val id: GameID) {
+data class GameInstance(internal val game: GamePhase, internal val id: GameID) {
 
     fun id()= id
 
