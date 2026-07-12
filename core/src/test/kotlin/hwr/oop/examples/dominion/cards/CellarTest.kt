@@ -14,7 +14,7 @@ import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
 
 
-class CellarTest: CardTest(Card.CELLAR, 0, 1, 0, 0, 0, 5) {
+class CellarTest: CardTest(Card.CELLAR, 0, 1, 0, 0, 0,5) {
 
     @Test
     fun cellarPlayTest() {
