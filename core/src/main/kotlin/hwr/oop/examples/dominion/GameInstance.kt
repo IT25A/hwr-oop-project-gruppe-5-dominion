@@ -1,11 +1,12 @@
 package hwr.oop.examples.dominion
-
 import hwr.oop.examples.dominion.GamePhases.DominionActionPhase
+import kotlinx.serialization.Serializable
 import java.util.UUID
 
-class GameInstance(private val game: GamePhase, private val id: String) {
+@Serializable
+data class GameInstance(private val game: GamePhase, private val id: GameID) {
 
-    fun id() = id
+    fun id()= id
 
     fun status(): String {
         if(game is GamePhase.Finished) {
@@ -124,8 +125,7 @@ class GameInstance(private val game: GamePhase, private val id: String) {
             val market = createMarket(kingdomCards)
             val state = BoardState(market, players.drop(1))
             val game = DominionActionPhase(state, ActivePlayer.create(players[0]))
-            val gId = UUID.randomUUID().toString()
-            return GameInstance(game, gId)
+            return GameInstance(game, GameID.random())
         }
 
         private fun createMarket(kingdomCards: List<String>): GameMarket {

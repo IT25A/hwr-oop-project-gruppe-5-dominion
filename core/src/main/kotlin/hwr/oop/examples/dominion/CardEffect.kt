@@ -1,5 +1,8 @@
 package hwr.oop.examples.dominion
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CardEffect(
     val card: Card,
     private val context: GameContext,

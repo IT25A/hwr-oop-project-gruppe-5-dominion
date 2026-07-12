@@ -4,13 +4,12 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
+import hwr.oop.examples.dominion.ports.out.GameRepository
 import hwr.oop.examples.template.FileSystemPersistence
 import hwr.oop.examples.template.FileSystemPersistenceConfiguration
-import hwr.oop.examples.template.SqlPersistence
 import hwr.oop.examples.template.config.AppConfig
 import hwr.oop.examples.template.config.ConfigLoader
 import hwr.oop.examples.template.config.PersistenceType
-import hwr.oop.examples.dominion.DominionPersistence
 import okio.Path.Companion.toPath
 
 class ExampleBaseCommand : CliktCommand(name = "example") {
@@ -35,19 +34,12 @@ fun main(args: Array<String>) {
 		.main(args)
 }
 
-private fun buildPersistence(appConfig: AppConfig): DominionPersistence {
-	return when (appConfig.persistence) {
-		PersistenceType.SQL -> SqlPersistence(
-			appConfig.sql.jdbcUrl,
-			appConfig.sql.username,
-			appConfig.sql.password,
+private fun buildPersistence(appConfig: AppConfig): GameRepository {
+	require(appConfig.persistence == PersistenceType.FILE_SYSTEM) { "only file system persistence is supported" }
+	return FileSystemPersistence(
+		configuration = FileSystemPersistenceConfiguration(
+			directory = appConfig.fileSystem.directory.toPath()
 		)
-		
-		PersistenceType.FILE_SYSTEM -> FileSystemPersistence(
-			configuration = FileSystemPersistenceConfiguration(
-				directory = appConfig.fileSystem.directory.toPath()
-			)
-		)
-	}
-}
+	)
 
+}

@@ -1,5 +1,8 @@
 package hwr.oop.examples.dominion
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Player(internal val id: PlayerId, internal val cards: PlayerCards){
 
     fun id() = id

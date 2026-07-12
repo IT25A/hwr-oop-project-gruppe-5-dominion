@@ -4,12 +4,14 @@ import hwr.oop.examples.dominion.ActivePlayer
 import hwr.oop.examples.dominion.BoardState
 import hwr.oop.examples.dominion.Card
 import hwr.oop.examples.dominion.GamePhase
+import kotlinx.serialization.Serializable
 import hwr.oop.examples.dominion.PlayerId
 
-class DominionActionPhase(
+@Serializable
+data class DominionActionPhase(
     override val state: BoardState,
     override val activePlayer: ActivePlayer
-) : GamePhase.ActionPhase, GamePhase.ActiveGamePhase {
+) : GamePhase.ActionPhase, GamePhase.ActiveGamePhase() {
     override fun toString(): String = "ActionPhase"
 
     override fun updateState(): GamePhase {

@@ -3,7 +3,7 @@ package hwr.oop.examples.dominion.cards
 import hwr.oop.examples.dominion.CardDefinition
 import hwr.oop.examples.dominion.CardType
 
-class Market: CardDefinition {
+class  Market: CardDefinition {
     override val types: List<CardType> = listOf(CardType.ACTION)
     override val name: String = "GameMarket"
     override val cost: Int = 5

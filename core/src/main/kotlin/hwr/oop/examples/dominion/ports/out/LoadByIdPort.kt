@@ -1,15 +1,15 @@
 package hwr.oop.examples.dominion.ports.out
-
+import hwr.oop.examples.dominion.GameID
 import hwr.oop.examples.dominion.GameInstance
 
-import hwr.oop.examples.doppelkopf_2026.core.GameId
 
 interface LoadGameByIdPort {
 
-    fun loadByid(gameId: GameId): Game
+    fun loadByid(gameId: GameID): GameInstance
+    fun loadByid(gameId: String): GameInstance = loadByid(GameID(gameId))
 
     class CouldNotLoadException(
-        gameId: GameId,
+        gameId: GameID,
         cause: Exception? = null
     ) : RuntimeException(
         "Could not load game with id: $gameId",

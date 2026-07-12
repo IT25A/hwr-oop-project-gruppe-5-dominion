@@ -1,5 +1,8 @@
 package hwr.oop.examples.dominion
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 sealed interface GamePhase {
     val state: BoardState
     val activePlayer: ActivePlayer

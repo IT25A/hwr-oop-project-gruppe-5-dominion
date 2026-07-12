@@ -1,8 +1,8 @@
 package hwr.oop.examples.template.service
 
+import hwr.oop.examples.dominion.ports.out.GameRepository
 import hwr.oop.examples.template.FileSystemPersistence
 import hwr.oop.examples.template.FileSystemPersistenceConfiguration
-import hwr.oop.examples.template.core.DominionPersistence
 import okio.Path.Companion.toPath
 import okio.fakefilesystem.FakeFileSystem
 import org.junit.jupiter.api.BeforeEach
@@ -19,36 +19,28 @@ import org.springframework.web.context.WebApplicationContext
 
 @SpringBootTest(webEnvironment = MOCK)
 class ServiceFileSystemTest {
-	
+
 	@TestConfiguration
 	class Config {
 		private val fakeFileSystem = FakeFileSystem()
 		private val tempDir = "/tmp/service-fs-test".toPath()
-		private val persistence: FileSystemPersistence = FileSystemPersistence(
+		private val persistence = FileSystemPersistence(
 			FileSystemPersistenceConfiguration(tempDir),
 			fakeFileSystem.also { it.createDirectories(tempDir) }
 		)
-		
-		@Bean
+
+		@Bean("testPersistence")
 		@Primary
-		fun persistence(): DominionPersistence = persistence
+		fun persistence(): GameRepository = persistence
 	}
-	
+
 	@Autowired
 	private lateinit var webApplicationContext: WebApplicationContext
-	
+
 	private lateinit var mockMvc: MockMvc
-	
+
 	@BeforeEach
 	fun setUp() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build()
 	}
-	
-	@Test
-	fun `do nothing`() {
-		// given
-		// when
-		// then
-	}
-	
 }
