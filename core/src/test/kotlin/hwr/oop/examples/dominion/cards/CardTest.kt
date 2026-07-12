@@ -11,7 +11,7 @@ import hwr.oop.examples.dominion.Stats
 
 import org.assertj.core.api.Assertions.assertThat
 
-open class CardTest(val card: Card, val expectedDraws: Int,val expectedActions: Int, val expectedBuys: Int, val expectedGold: Int) {
+open class CardTest(val card: Card, val expectedDraws: Int,val expectedActions: Int, val expectedBuys: Int, val expectedGold: Int, val expectedPoints: Int) {
 
     fun playTest() {
         val player = Player(PlayerId("player"), PlayerCards(hand = listOf(card)))
@@ -29,5 +29,6 @@ open class CardTest(val card: Card, val expectedDraws: Int,val expectedActions: 
         assertThat(activePlayer.actions()).isEqualTo(expectedActions)
         assertThat(activePlayer.buys()).isEqualTo(expectedBuys)
         assertThat(activePlayer.coins()).isEqualTo(expectedGold)
+        assertThat(result.currentPlayersPoints()).isEqualTo(expectedPoints)
     }
 }

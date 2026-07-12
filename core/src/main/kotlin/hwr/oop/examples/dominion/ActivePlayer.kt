@@ -18,6 +18,7 @@ data class ActivePlayer(
     fun actions() = stats.actions
     fun buys() = stats.purchases
     fun coins() = stats.money
+    fun points(state: BoardState) = player.calculatePoints(state)
 
     fun id() = player.id
 
@@ -53,5 +54,4 @@ data class ActivePlayer(
     }
 
     fun hand() = player.currentHand()
-
 }

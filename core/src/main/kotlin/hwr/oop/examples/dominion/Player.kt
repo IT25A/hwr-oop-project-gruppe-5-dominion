@@ -53,6 +53,9 @@ data class Player(internal val id: PlayerId, internal val cards: PlayerCards = P
         return cards.inHand(card)
     }
 
+    fun calculatePoints(state: BoardState): Int{
+        return cards.all().sumOf { it.calculatePoints(this, state) }
+    }
 
 
 }

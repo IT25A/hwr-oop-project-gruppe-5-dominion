@@ -12,6 +12,8 @@ data class PlayerCards(internal val stock: List<Card> = List(7){ Card.COPPER } +
         return PlayerCards(stock, discardedCards())
     }
 
+    fun all() = stock + discardedCards()
+
     private fun discardedCards() = discard + hand + used
 
     fun draw(count: Int): PlayerCards {
@@ -69,7 +71,6 @@ data class PlayerCards(internal val stock: List<Card> = List(7){ Card.COPPER } +
     fun removeSelection(selection: List<Card>): PlayerCards {
         return PlayerCards(stock, discard + selection, hand.subtractCopiesOf(selection), used)
     }
-
 
     fun handSize() = hand.size
     fun usedSize() = used.size
