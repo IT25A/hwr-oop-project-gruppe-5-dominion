@@ -9,7 +9,9 @@ import org.springframework.web.context.request.WebRequest
 
 @RestControllerAdvice
 class ControllerAdvice {
-	
+
+	//https://imgs.search.brave.com/DuICWRwS6BSl4yTwpwdCBZqo1Rl9QPdnWmUNQj-8zAA/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS50ZW5vci5jb20v/a2VBRUwxTlZSM3dB/QUFBTS9jaGlsbGd1/eS5naWY.jpeg
+
 	@ExceptionHandler(Exception::class)
 	fun handleGenericException(
 		ex: Exception,
