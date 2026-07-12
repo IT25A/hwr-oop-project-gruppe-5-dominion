@@ -12,7 +12,7 @@ class GameMarketTest {
 
     private fun player() =
         ActivePlayer(
-            Player(PlayerId("p1"), PlayerCards(hand = listOf(Card.COPPER))),
+            Player(PlayerId("p1"), PlayerCards(hand = listOf(Card.COPPER)),),
             Stats(1, 1, 10)
         )
 

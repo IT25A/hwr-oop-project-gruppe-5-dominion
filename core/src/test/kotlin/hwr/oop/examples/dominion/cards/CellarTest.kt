@@ -12,7 +12,6 @@ import hwr.oop.examples.dominion.PlayerId
 import hwr.oop.examples.dominion.Stats
 import org.junit.Test
 import org.assertj.core.api.Assertions.assertThat
-import kotlin.reflect.typeOf
 
 
 class CellarTest: CardTest(Card.CELLAR, 0, 1, 0, 0) {
@@ -26,7 +25,10 @@ class CellarTest: CardTest(Card.CELLAR, 0, 1, 0, 0) {
     fun cellarEffectTest(){
         val state = BoardState(GameMarket(emptySet()), emptyList())
         val id = PlayerId("p1")
-        val player = Player(id, PlayerCards(stock = listOf(Card.ESTATE), hand = listOf(Card.CELLAR, Card.COPPER, Card.COPPER)))
+        val player = Player(
+            id,
+            PlayerCards(stock = listOf(Card.ESTATE), hand = listOf(Card.CELLAR, Card.COPPER, Card.COPPER)),
+        )
         val stats = Stats(0, 0, 0)
         val ctx = GameContext(player, stats, state)
 

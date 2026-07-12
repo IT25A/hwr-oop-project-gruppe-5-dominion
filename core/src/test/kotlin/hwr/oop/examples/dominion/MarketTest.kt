@@ -2,14 +2,13 @@ package hwr.oop.examples.dominion
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class MarketTest {
 
-    val richPlayer = ActivePlayer(Player(PlayerId("richPlayer"), PlayerCards()), Stats(0, 2, 10))
-    val poorPlayer = ActivePlayer(Player(PlayerId("poorPlayer"), PlayerCards()), Stats(0, 1, 0))
-    val sadPlayer = ActivePlayer(Player(PlayerId("sadPlayer"), PlayerCards()), Stats(0, 0, 20))
+    val richPlayer = ActivePlayer(Player(PlayerId("richPlayer"), PlayerCards(),), Stats(0, 2, 10))
+    val poorPlayer = ActivePlayer(Player(PlayerId("poorPlayer"), PlayerCards(),), Stats(0, 1, 0))
+    val sadPlayer = ActivePlayer(Player(PlayerId("sadPlayer"), PlayerCards(),), Stats(0, 0, 20))
     val market = GameMarket(setOf(Pile(Card.COPPER, 1), Pile(Card.ESTATE, 3)))
 
     @Test

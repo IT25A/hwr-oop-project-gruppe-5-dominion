@@ -17,10 +17,14 @@ open class CardTest(val card: Card, val expectedDraws: Int,val expectedActions: 
         val player = Player(PlayerId("player"), PlayerCards(hand = listOf(card)))
         val market = GameMarket(emptySet())
         val state = BoardState(market, emptyList())
+
         val result = card.play(player, Stats(0, 0, 0), state)
         require(result is GamePhase.ActiveGamePhase)
         val activePlayer = result.activePlayer
-
+        var expectedActions = expectedActions
+        if(card.isAction()){
+            expectedActions--
+        }
         assertThat(activePlayer.player.currentHand().size).isEqualTo(expectedDraws)
         assertThat(activePlayer.actions()).isEqualTo(expectedActions)
         assertThat(activePlayer.buys()).isEqualTo(expectedBuys)
