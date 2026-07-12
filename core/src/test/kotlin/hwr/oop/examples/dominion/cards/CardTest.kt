@@ -22,7 +22,7 @@ open class CardTest(
     val expectedPrice: Int
 ) {
 
-    private val player = Player(PlayerId("player"), PlayerCards(hand = listOf(card)))
+    private val player = Player(PlayerId("player"), PlayerCards(stock = emptyList(), hand = listOf(card)))
     private val market = GameMarket(emptySet())
     private val state = BoardState(market, emptyList())
 
