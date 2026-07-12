@@ -2,24 +2,24 @@ package hwr.oop.examples.template.cli
 
 import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.core.obj
+import hwr.oop.examples.dominion.testdata.Fixture
 import com.github.ajalt.clikt.testing.test
 import hwr.oop.examples.dominion.GameID
 import hwr.oop.examples.dominion.GameInstance
 import hwr.oop.examples.dominion.ports.out.GameRepository
-import hwr.oop.examples.dominion. testdata.Fixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class BuyCardsCommandTest {
+class PlayActionCommandTest {
 
     private class FakeRepository(
         private var game: GameInstance
     ) : GameRepository {
 
-        var saveCalls = 0
+        var savedGame: GameInstance? = null
 
         override fun save(game: GameInstance) {
-            saveCalls++
+            savedGame = game
             this.game = game
         }
 
@@ -27,58 +27,56 @@ class BuyCardsCommandTest {
     }
 
     @Test
-    fun `buying no cards skips phase and saves`() {
-        val game = Fixture.purchasePhaseGame()
+    fun `successful action saves game`() {
+        val game = Fixture.actionPhaseGame()
         val repository = FakeRepository(game)
 
-        BuyCardsCommand()
+        val result = PlayActionCommand()
             .context {
                 obj = CliContext(repository, game.id())
             }
             .test(
-                "--player-id",
-                game.currentPlayerId().value,
-                "--card-name", "" //leaving this out doesn't call the command
+                "--player-id", game.currentPlayerId().value,
+                "--card-name", "Cellar"
             )
 
-        assertThat(repository.saveCalls).isEqualTo(1)
+        assertThat(result.statusCode).isEqualTo(0)
+        assertThat(repository.savedGame).isNotNull()
     }
 
     @Test
-    fun `buying a card saves game`() {
-        val game = Fixture.purchasePhaseGame()
+    fun `invalid player prints error`() {
+        val game = Fixture.actionPhaseGame()
         val repository = FakeRepository(game)
 
-        BuyCardsCommand()
+        val result = PlayActionCommand()
             .context {
                 obj = CliContext(repository, game.id())
             }
             .test(
-                "--player-id",
-                game.currentPlayerId().value,
-                "--card-name",
-                "copper"
+                "--player-id", "does-not-exist",
+                "--card-name", "Village"
             )
 
-        assertThat(repository.saveCalls).isEqualTo(1)
+        assertThat(result.stdout).contains("Couldn't play action:")
+        assertThat(repository.savedGame).isNull()
     }
 
     @Test
-    fun `invalid card prints error`() {
-        val game = Fixture.purchasePhaseGame()
+    fun `invalid action card prints error`() {
+        val game = Fixture.actionPhaseGame()
         val repository = FakeRepository(game)
 
-        val result = BuyCardsCommand()
+        val result = PlayActionCommand()
             .context {
                 obj = CliContext(repository, game.id())
             }
             .test(
-                "--player-id",
-                game.currentPlayerId().value,
-                "--card-name",
-                "THIS_CARD_DOES_NOT_EXIST"
+                "--player-id", game.currentPlayerId().value,
+                "--card-name", "DefinitelyNotACard"
             )
 
-        assertThat(result.stdout).contains("Couldn't buy card:")
+        assertThat(result.stdout).contains("Couldn't play action:")
+        assertThat(repository.savedGame).isNull()
     }
 }

@@ -8,8 +8,4 @@ class CopperTest: CardTest(Card.COPPER, 0, 0, 0, 1, 0, 1) {
     fun copperPlayTest() {
         super.playTest()
     }
-    @Test
-    fun copperPointsTest(){
-
-    }
 }

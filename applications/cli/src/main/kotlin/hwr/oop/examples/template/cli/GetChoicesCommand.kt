@@ -14,11 +14,14 @@ class GetChoicesCommand : CliktCommand(name = "getChoices") {
 
 	override fun run() {
 		instance = ctx.loadGame()
-
-		val choices = instance.choices().sortedBy { it.playerId.value }
-		choices.forEachIndexed { index, choice ->
-			echo("=== Choice ${index + 1} ===")
-			show(choice)
+		try {
+			val choices = instance.choices().sortedBy { it.playerId.value }
+			choices.forEachIndexed { index, choice ->
+				echo("=== Choice ${index + 1} ===")
+				show(choice)
+			}
+		} catch (ex: Exception) {
+			echo(ex.message)
 		}
 	}
 
